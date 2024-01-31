@@ -4,7 +4,7 @@ from typing import Optional
 class GraphEdge:
     def __init__(self, origin, desination, value):
         self._origin = origin
-        self._destination = destination
+        self._destination = desination
         self._value = value
 
     def opposite(self, v: N) -> Optional[N]:
