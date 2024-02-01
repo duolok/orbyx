@@ -1,4 +1,5 @@
 import os
+import sys
 
 from jinja2 import Environment, FileSystemLoader
 from services.visualizer_api import Visualizer
@@ -9,10 +10,11 @@ class BlockVisualizer(Visualizer):
         current_directory = os.getcwd()
         # Get the parent directory (one level up)
         parent_directory = os.path.dirname(current_directory)
-        app_templates_dir = os.path.join(parent_directory, 'block_visualizer', 'visualize', 'templates')
+        app_templates_dir = os.path.join(parent_directory, 'block_visualizer','build', 'lib', 'visualize', 'templates')
         # Create a FileSystemLoader to load templates from the specified directory
-        loader = FileSystemLoader(os.path.join(app_templates_dir))
+        current_directory = os.getcwd()
 
+        loader = FileSystemLoader(os.path.join(app_templates_dir))
         # Create a Jinja2 environment with the loader
         env = Environment(loader=loader)
 

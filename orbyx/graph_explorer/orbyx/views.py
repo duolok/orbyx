@@ -1,4 +1,6 @@
 # from core.proba import IspisCore
+import os
+import sys
 import xml.etree.ElementTree as ET
 
 from django.utils.safestring import mark_safe
@@ -26,6 +28,8 @@ def load_plugins():
 
 
 def load_graph_from_plugin(request):
+    print(sys.executable)
+    print(os.getenv('VIRTUAL_ENV'))
     plugins = load_plugins()
     template = loader.get_template('orbyx/index.html')
     return HttpResponse(template.render({'main_view': mark_safe(plugins[0].send_data("parsed_graph_data"))}))

@@ -15,4 +15,5 @@ pwd
 lay_eggs api
 lay_eggs block_visualizer
 lay_eggs core
+lay_eggs graph_explorer
 run_server graph_explorer

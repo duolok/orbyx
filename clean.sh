@@ -10,3 +10,4 @@ cd orbyx
 remove_eggs api
 remove_eggs core
 remove_eggs block_visualizer
+remove_eggs graph_explorer
