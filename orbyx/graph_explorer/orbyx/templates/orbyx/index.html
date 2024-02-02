@@ -4,11 +4,12 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+<!--    <script src="https://d3js.org/d3.v5.min.js"></script>-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bayon&family=Rubik&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js"></script>
     <title>Orbyx - Graph Explorer</title>
     <link rel="stylesheet" href="{% static 'orbyx/style.css' %}">
   </head>
@@ -72,103 +73,106 @@
           </div>
         </div>
         <div class="complex-view">
-          <canvas id="main-canvas" width="100%" height="100%"></canvas>
+          {{main_view}}
+<!--          <canvas id="main-canvas" width="100%" height="100%">-->
+
+<!--          </canvas>-->
         </div>
 
       </div>
     </div>
 
-<script>
-    const bubbleArea = () => {
-      const d = document;
-      const c = d.getElementById('main-canvas');
-      const ctx = c.getContext('2d');
+<!--<script>-->
+<!--    const bubbleArea = () => {-->
+<!--      const d = document;-->
+<!--      const c = d.getElementById('main-canvas');-->
+<!--      const ctx = c.getContext('2d');-->
 
-      const settings = {
-        colors: ['#16193B', '#35478C', '#4E7AC7', '#7FB2F0', '#ADD5F7'],
-        shake: 5,
-        maxAmount: 300
-      };
+<!--      const settings = {-->
+<!--        colors: ['#16193B', '#35478C', '#4E7AC7', '#7FB2F0', '#ADD5F7'],-->
+<!--        shake: 5,-->
+<!--        maxAmount: 300-->
+<!--      };-->
 
-      // Set initial canvas size
-      setCanvasSize();
+<!--      // Set initial canvas size-->
+<!--      setCanvasSize();-->
 
-      // Start rendering
-      setInterval(render, 10);
+<!--      // Start rendering-->
+<!--      setInterval(render, 10);-->
 
-      // Set initial mouse position
-      const mouse = { x: c.width / 2 - 50, y: c.height / 2 - 70 };
-      const particles = [];
-      let removedParticles = 0;
+<!--      // Set initial mouse position-->
+<!--      const mouse = { x: c.width / 2 - 50, y: c.height / 2 - 70 };-->
+<!--      const particles = [];-->
+<!--      let removedParticles = 0;-->
 
-      function setCanvasSize() {
-        c.width = window.innerWidth;
-        c.height = window.innerHeight;
-      }
+<!--      function setCanvasSize() {-->
+<!--        c.width = window.innerWidth;-->
+<!--        c.height = window.innerHeight;-->
+<!--      }-->
 
-      function render() {
-        particles.push({
-          x: mouse.x,
-          y: mouse.y,
-          angle: Math.random() * 100,
-          velocity: 2 * Math.random() * 2,
-          radius: Math.random() * 50,
-          opacity: 1,
-          age: 0,
-          color: settings.colors[Math.round(Math.random() * settings.colors.length)]
-        });
+<!--      function render() {-->
+<!--        particles.push({-->
+<!--          x: mouse.x,-->
+<!--          y: mouse.y,-->
+<!--          angle: Math.random() * 100,-->
+<!--          velocity: 2 * Math.random() * 2,-->
+<!--          radius: Math.random() * 50,-->
+<!--          opacity: 1,-->
+<!--          age: 0,-->
+<!--          color: settings.colors[Math.round(Math.random() * settings.colors.length)]-->
+<!--        });-->
 
-        ctx.clearRect(0, 0, c.width, c.height);
+<!--        ctx.clearRect(0, 0, c.width, c.height);-->
 
-        for (let i = particles.length - 1; i >= 0; i--) {
-          const particle = particles[i];
-          particle.age++;
-          particle.radius *= 0.99;
-          particle.x += Math.random() * settings.shake - Math.random() * settings.shake;
-          particle.y += Math.random() * settings.shake - Math.random() * settings.shake;
+<!--        for (let i = particles.length - 1; i >= 0; i&#45;&#45;) {-->
+<!--          const particle = particles[i];-->
+<!--          particle.age++;-->
+<!--          particle.radius *= 0.99;-->
+<!--          particle.x += Math.random() * settings.shake - Math.random() * settings.shake;-->
+<!--          particle.y += Math.random() * settings.shake - Math.random() * settings.shake;-->
 
-          particle.x += particle.velocity * Math.cos(particle.angle);
-          particle.y += particle.velocity * Math.sin(particle.angle);
+<!--          particle.x += particle.velocity * Math.cos(particle.angle);-->
+<!--          particle.y += particle.velocity * Math.sin(particle.angle);-->
 
-          if (particle.age > 100) {
-            particle.opacity *= 1.1;
-          }
+<!--          if (particle.age > 100) {-->
+<!--            particle.opacity *= 1.1;-->
+<!--          }-->
 
-          if (particle.age >= settings.maxAmount || particle.radius < 0.1) {
-            removedParticles += 1;
-            particles.splice(i, 1);
-          }
+<!--          if (particle.age >= settings.maxAmount || particle.radius < 0.1) {-->
+<!--            removedParticles += 1;-->
+<!--            particles.splice(i, 1);-->
+<!--          }-->
 
-          ctx.beginPath();
-          ctx.fillStyle = particle.color;
-          ctx.arc(
-            particle.x,
-            particle.y,
-            particle.radius,
-            0,
-            2 * Math.PI,
-            false
-          );
-          ctx.globalAlpha = particle.opacity;
-          ctx.fill();
-        }
+<!--          ctx.beginPath();-->
+<!--          ctx.fillStyle = particle.color;-->
+<!--          ctx.arc(-->
+<!--            particle.x,-->
+<!--            particle.y,-->
+<!--            particle.radius,-->
+<!--            0,-->
+<!--            2 * Math.PI,-->
+<!--            false-->
+<!--          );-->
+<!--          ctx.globalAlpha = particle.opacity;-->
+<!--          ctx.fill();-->
+<!--        }-->
 
-        // Update information
-        d.querySelector('.counter').innerHTML = `Particles count: ${particles.length}`;
-        d.querySelector('.garbage').innerHTML = `Particles removed: ${removedParticles}`;
-      }
+<!--        // Update information-->
+<!--        d.querySelector('.counter').innerHTML = `Particles count: ${particles.length}`;-->
+<!--        d.querySelector('.garbage').innerHTML = `Particles removed: ${removedParticles}`;-->
+<!--      }-->
 
-      // Listeners
-      window.addEventListener('resize', setCanvasSize, false);
+<!--      // Listeners-->
+<!--      window.addEventListener('resize', setCanvasSize, false);-->
 
-      c.addEventListener('mousemove', function (e) {
-        mouse.x = e.clientX || e.pageX;
-        mouse.y = e.clientY || e.pageY;
-      }, false);
-    }
+<!--      c.addEventListener('mousemove', function (e) {-->
+<!--        mouse.x = e.clientX || e.pageX;-->
+<!--        mouse.y = e.clientY || e.pageY;-->
+<!--      }, false);-->
+<!--    }-->
 
-    bubbleArea();
-  </script>
+<!--    bubbleArea();-->
+<!--  </script>-->
   <script>
     function changeCanvasStyle() {
       var canvasElements = document.querySelectorAll('canvas');
