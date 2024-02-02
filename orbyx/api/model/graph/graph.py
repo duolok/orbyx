@@ -1,5 +1,4 @@
-from graph_node import GraphNode
-from graph_edge import GraphEdge
+from typing import Optional, TypeVar
 
 class Graph:
     def __init__(self, directed=True):
@@ -55,3 +54,34 @@ class Graph:
         e = GraphEdge(u, v, x)
         self._outgoing[u][v] = e
         self._incoming[v][v] = e
+
+class GraphEdge:
+    def __init__(self, origin, desination, value):
+        self._origin = origin
+        self._destination = desination
+        self._value = value
+
+    def endpoints(self):
+        return (self._origin, self._destination)
+
+    def value(self):
+        return self._value
+
+    def __hash__(self):
+        return hash((self._origin, self._destination))
+
+    def __str__(self):
+        return f"{self._origin}, {self._destination}, {self._value}"
+
+class GraphNode:
+    def __init__(self, value):
+        self._value = value
+
+    def node_value(self):
+        return self._value
+
+    def __hash__(self):
+        return hash(id(self))
+
+    def __str__(self):
+        return str(self._value)
