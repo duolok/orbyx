@@ -8,6 +8,8 @@ setup(
             ['orbyx_main=core.console_main:main'],
         'django_app':
             ['django=core.engine:Engine'],
+        'core':
+            ['django=core.engine:Engine'],
     },
     install_requires=[
         'orbyx-api==0.1',
