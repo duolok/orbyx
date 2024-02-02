@@ -1,37 +1,33 @@
-# from core.proba import IspisCore
 import os
 import sys
 import xml.etree.ElementTree as ET
-
 from django.utils.safestring import mark_safe
-from services.core_api import CoreAPI
-import pkg_resources
-import services.core_api
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import loader, Context
 
+import pkg_resources
 
 def index(request):
     template = loader.get_template('orbyx/index.html')
     return HttpResponse(template.render({}, request))
 
+def get_data_source_plugins():
+    return [ep.load() for ep in pkg_resources.iter_entry_points(group='orbyx_data_source_plugin')]
 
-def load_plugins():
-    plugins = []
-    for ep in pkg_resources.iter_entry_points(group="django_app"):
-        p = ep.load()
-        print("{} {}".format(ep.name, p))
-        plugin = p()
-        plugins.append(plugin)
-    return plugins
+def get_visualizer_plugins():
+    return [ep.load() for ep in pkg_resources.iter_entry_points(group='orbyx_visualizer_plugin')]
 
+def get_engine():
+    return next(pkg_resources.iter_entry_points('core')).load()
 
+'''This will be replaced once action for applying data source and visualization are implemented.'''
 def load_graph_from_plugin(request):
-    print(sys.executable)
-    print(os.getenv('VIRTUAL_ENV'))
-    plugins = load_plugins()
-    template = loader.get_template('orbyx/index.html')
-    return HttpResponse(template.render({'main_view': mark_safe(plugins[0].send_data("parsed_graph_data"))}))
+    data_sources = get_data_source_plugins()
+    visualizers = get_visualizer_plugins()
+    engine = get_engine()
 
+    visualization = engine.send_data(None, "AYO")
+    template = loader.get_template('orbyx/index.html')
+    return HttpResponse(template.render({'main_view': mark_safe(visualization)}, request))
 
