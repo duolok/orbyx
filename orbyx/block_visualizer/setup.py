@@ -8,6 +8,8 @@ setup(
             ['block_visualiser2=proba2.ispis2:Ispis'],
         'generate_template':
             ['template=visualize.generate_template:BlockVisualizer'],
+        'orbyx_visualizer_plugin':
+            ['template=visualize.generate_template:BlockVisualizer'],
     },
     install_requires=[
         'orbyx-api==0.1',
