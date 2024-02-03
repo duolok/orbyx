@@ -8,6 +8,7 @@ from config import *
 
 visited_urls = set()
 pages_scraped = 0
+urls_to_scrape = Queue()
 
 def scrape_wikipedia(start_url, result):
     urls_to_scrape.put(start_url)
@@ -58,6 +59,7 @@ def remove_dangling_children(result_dictionary):
     return result_dictionary
 
 def get_scraped_dictionary(start_url):
+    global urls_to_scrape
     urls_to_scrape = Queue()
     scraper_result = {}
     setup_logging()
