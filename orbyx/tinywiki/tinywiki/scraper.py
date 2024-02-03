@@ -2,9 +2,9 @@ import logging
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from queue import Queue
-from utils import *
-from logger import *
-from config import *
+from tinywiki.utils import *
+from tinywiki.logger import *
+from tinywiki.config import *
 
 visited_urls = set()
 pages_scraped = 0
