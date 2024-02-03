@@ -13,6 +13,7 @@ def index(request):
     return HttpResponse(template.render({}, request))
 
 def get_data_source_plugins():
+    print([ep.load() for ep in pkg_resources.iter_entry_points(group='orbyx_data_source_plugin')], file=sys.stderr)
     return [ep.load() for ep in pkg_resources.iter_entry_points(group='orbyx_data_source_plugin')]
 
 def get_visualizer_plugins():

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
-
+from api.services.core_api import Graph
 class DataSourceAPI(ABC):
     @abstractmethod
     def parse_data(self, data: Any) -> List[Dict[str, Any]]:

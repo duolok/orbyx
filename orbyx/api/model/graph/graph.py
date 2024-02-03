@@ -53,7 +53,7 @@ class Graph:
             raise ValueError("U and v are already adjacent")
         e = GraphEdge(u, v, x)
         self._outgoing[u][v] = e
-        self._incoming[v][v] = e
+        self._incoming[v][u] = e
 
 class GraphEdge:
     def __init__(self, origin, desination, value):

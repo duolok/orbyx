@@ -1,5 +1,6 @@
 from typing import Any, Dict, List
-from services.core_api import CoreAPI
+from api.services.core_api import CoreAPI
+from api.services.core_api import Graph
 import pkg_resources
 
 ''' This method will be removed once plugin pipeline is implemented. '''
@@ -17,7 +18,7 @@ class Engine(CoreAPI):
         self.data_source_plugin = None
         self.visualizer_plugin = None
 
-    def _set_plugins(data_source_plugin, visualizer_plugin):
+    def _set_plugins(self, data_source_plugin, visualizer_plugin):
         self.data_source_plugin = data_source_plugin
         self.visualizer_plugin = visualizer_plugin
 
