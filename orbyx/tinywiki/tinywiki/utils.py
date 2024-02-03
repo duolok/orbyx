@@ -1,6 +1,6 @@
 import logging
 import requests
-from config import BASE_URL
+from tinywiki.config import BASE_URL
 
 def is_wiki_article_url(url):
     return url.startswith('/wiki/') and not url.startswith('/wiki/Special:')
