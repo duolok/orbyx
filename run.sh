@@ -33,6 +33,7 @@ cd orbyx
 
 install_package "api"
 install_package "block_visualizer"
+install_package "tinywiki"
 install_package "core"
 install_package "graph_explorer"
 

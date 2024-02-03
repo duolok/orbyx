@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
-from model.graph.graph import Graph
+from model.graph.graph import *
 
 class CoreAPI(ABC):
     @abstractmethod

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
+from model.graph.graph import Graph
 
 class DataSourceAPI(ABC):
     @abstractmethod
@@ -8,6 +9,6 @@ class DataSourceAPI(ABC):
         pass
 
     @abstractmethod
-    def get_data(self) -> Graph:
+    def get_graph(self, parsed_data: List[Dict[str, Any]]) -> Graph:
         """Method that will send data to the plugin and recieve a graph"""
         pass
