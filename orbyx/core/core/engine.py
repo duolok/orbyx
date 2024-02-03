@@ -23,6 +23,9 @@ class Engine(CoreAPI):
         self.visualizer_plugin = visualizer_plugin
 
     def send_data(self, graph):
+        wikipedia_data_source = load_plugins("orbyx_tinywiki")[0]
+        parsed_data = wikipedia_data_source.parse_data("some link will be here")  
+        graph = wikipedia_data_source.get_graph(parsed_data)
         visualizer = load_plugins("generate_template")
         return visualizer[0].visualize(graph)
 
