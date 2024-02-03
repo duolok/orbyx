@@ -1,0 +1,220 @@
+<style>
+
+.node {
+  cursor: pointer;
+  color: #3182bd;
+
+}
+
+.link {
+  fill: none;
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+</style>
+</br>
+<div class="center">
+    <div>
+        <div class = "details">
+            Current node:
+        </div>
+        <svg width="1200" height="800">
+        </svg>
+    </div>
+</div>
+<script>
+var svg = d3.select("svg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
+
+    var zoomContainer = svg.call(d3.zoom().on("zoom", function () {
+        zoomContainer.attr("transform", d3.event.transform)
+    }))
+    .append("g");
+
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    var simulation = d3.forceSimulation()
+                        .force("charge", d3.forceManyBody().strength(-100))
+                        .force("center", d3.forceCenter(width / 2, height / 2));
+
+    var linkMap = d3.map();
+    var graph = {
+        nodes: [
+            {
+                "id" : 101,
+                "department" : "COMPUTER_SCIENCE",
+                "vanityName" : "Intro to Typing"
+            },
+            {
+                "id" : 201,
+                "department" : "ENGLISH",
+                "vanityName" : "Postmodern Deconstructionism"
+            },
+            {
+                "id" : 51,
+                "department" : "MATH",
+                "vanityName" : "Remedial Galois Field Arithmetic"
+            },
+            {
+                "id" : 61,
+                "department" : "MATH2",
+                "vanityName" : "Remedial Galois Field Arithmetic"
+            },
+            {
+                "id" : 71,
+                "department" : "MATH3",
+                "vanityName" : "Remedial Galois Field Arithmetic"
+            },
+        ],
+        links: [
+            {
+                source: 51,
+                target: 201,
+            },
+            {
+                source: 101,
+                target: 201,
+            },
+            {
+                source: 51,
+                target: 61,
+            },
+            {
+                source: 51,
+                target: 71,
+            },
+        ]
+    };
+
+        var nodes = graph.nodes,
+            nodeById = d3.map(nodes, function(d) { return d.id; }),
+            links = graph.links,
+            bilinks = [];
+
+        links.forEach(function(link) {
+            var s = link.source = nodeById.get(link.source),
+                t = link.target = nodeById.get(link.target);
+            links.push({source: s, target: t});
+            bilinks.push([s, t]);
+        });
+
+        //Populate the map that keeps track of how many links a class node has
+        links.forEach(function(d){
+            if(linkMap.has(d.source.id))
+                linkMap.set(d.source.id, linkMap.get(d.source.id) + .5);
+            else
+                linkMap.set(d.source.id, .5);
+        });
+
+        var link = zoomContainer.selectAll(".link")
+                         .attr("stroke", "#000")
+                          .attr("stroke-opacity", 0.6)
+                        .data(bilinks)
+                        .enter().append("line")
+                        .attr("class", "link");
+
+
+        var node = zoomContainer.selectAll(".node")
+                        .data(nodes.filter(function(d) { return d.id; }))
+                        .enter().append('g')
+                        .attr("class", "node")
+                        .attr('id', function(d){return d.department;})
+                        .call(d3.drag()
+                              .on("start", dragstarted)
+                              .on("drag", dragged)
+                              .on("end", dragended));
+        zoomContainer.selectAll('.node').each(function(d){slozenPrikaz(d);});
+
+    zoomContainer.selectAll('.node').on("mouseover", function(d) {
+        d3.select(".details").append('text').text(d.department +" "+ d.vanityName);
+    }).on("mouseout", function(d) {
+        d3.select(".details").text("Current node: ");
+    });
+
+    function slozenPrikaz(d){
+      var duzina=150;
+
+      var textSize=10;
+      var visina=3*textSize;
+      visina+=textSize;
+
+      d3.select("g#"+d.department).append('rect').
+      attr('x',0).attr('y',0).attr('width',duzina).attr('height',visina)
+      .attr('fill','#3B4656');
+      //Name
+      d3.select("g#"+d.department).append('text').attr('x',duzina/2).attr('y',10)
+      .attr('text-anchor','middle')
+      .attr('font-size',textSize).attr('font-family','sans-serif')
+      .attr('fill','white').text(d.department);
+
+      //Line
+      d3.select("g#"+d.department).append('line').
+      attr('x1',0).attr('y1',2*textSize).attr('x2',duzina).attr('y2',2*textSize)
+      .attr('stroke','white').attr('stroke-width',2);
+
+        //DESCRIPTION
+       d3.select("g#"+d.department).append('text').attr('x',10).attr('y',3*textSize)
+          .attr('text-anchor','start')
+          .attr('font-size',textSize).attr('font-family','sans-serif')
+          .attr('fill','white').text(d.vanityName);
+
+    }
+
+        //Unfade all nodes when whitespace is clicked
+        svg.on("click", function(){
+            d3.selectAll(".node")
+                .attr("opacity", "1");
+        });
+
+        //Force parameter buttons
+        d3.select("#forcesPlus")
+            .on("click", function(){
+            updateParameters(1);
+        });
+        d3.select("#forcesMinus")
+            .on("click", function(){
+            updateParameters(-1);
+        });
+
+        node.append("title")
+            .text(function(d) { return d.id; });
+
+        simulation
+            .nodes(nodes)
+            .on("tick", ticked);
+
+        simulation.force("link", d3.forceLink(links).id(d => d.id).distance(200).strength(1));
+
+        function ticked() {
+            link.attr('x1', function(d) { return d[0].x; })
+            .attr('y1', function(d) { return d[0].y; })
+            .attr('x2', function(d) { return d[1].x; })
+            .attr('y2', function(d) { return d[1].y; });
+            node.attr("transform", positionNode);
+        }
+
+    function positionNode(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+    }
+
+    function dragstarted(d) {
+        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x, d.fy = d.y;
+    }
+
+    function dragged(d) {
+        d.fx = d3.event.x, d.fy = d3.event.y;
+    }
+
+    function dragended(d) {
+        if (!d3.event.active) simulation.alphaTarget(.01);
+        d.fx = null, d.fy = null;
+    }
+
+    function linkDistance(d){
+        console.log(d);
+    }
+
+</script>

@@ -1,15 +1,29 @@
 from typing import Any, Dict, List
-from api.graph import Graph  
-from api.core_api import CoreAPI  
+from services.core_api import CoreAPI
+import pkg_resources
+
+''' This method will be removed once plugin pipeline is implemented. '''
+def load_plugins(oznaka):
+    plugins = []
+    for ep in pkg_resources.iter_entry_points(group=oznaka):
+        p = ep.load()
+        print("{} {}".format(ep.name, p))
+        plugin = p()
+        plugins.append(plugin)
+    return plugins
 
 class Engine(CoreAPI):
     def __init__(self):
-        self.graph = Graph()
+        self.data_source_plugin = None
+        self.visualizer_plugin = None
+
+    def _set_plugins(data_source_plugin, visualizer_plugin):
+        self.data_source_plugin = data_source_plugin
+        self.visualizer_plugin = visualizer_plugin
 
     def send_data(self, graph):
-        """Method to send data to Django"""
-        # Implement sending data logic to Django
-        pass
+        visualizer = load_plugins("generate_template")
+        return visualizer[0].visualize(graph)
 
     def get_data(self, query_params: Dict[str, Any]):
         """Method to retrieve data from Django"""
@@ -40,3 +54,4 @@ class Engine(CoreAPI):
         """Method to save the current version of the graph"""
         # Implement caching graph logic
         pass
+
