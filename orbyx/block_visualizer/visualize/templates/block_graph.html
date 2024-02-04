@@ -24,6 +24,17 @@
     </div>
 </div>
 <script>
+var loadedNodes = {{ nodes }};
+var loadedEdges = {{ edges }};
+var parsedNodes = [];
+loadedNodes.forEach(node => {
+    parsedNodes.push(JSON.parse(node))
+});
+var parsedEdges = [];
+loadedEdges.forEach(node => {
+    parsedEdges.push(JSON.parse(node))
+});
+
 var svg = d3.select("svg"),
         width = +svg.attr("width"),
         height = +svg.attr("height");
@@ -40,73 +51,20 @@ var svg = d3.select("svg"),
                         .force("center", d3.forceCenter(width / 2, height / 2));
 
     var linkMap = d3.map();
-    var graph = {
-        nodes: [
-            {
-                "id" : 101,
-                "department" : "COMPUTER_SCIENCE",
-                "vanityName" : "Intro to Typing"
-            },
-            {
-                "id" : 201,
-                "department" : "ENGLISH",
-                "vanityName" : "Postmodern Deconstructionism"
-            },
-            {
-                "id" : 51,
-                "department" : "MATH",
-                "vanityName" : "Remedial Galois Field Arithmetic"
-            },
-            {
-                "id" : 61,
-                "department" : "MATH2",
-                "vanityName" : "Remedial Galois Field Arithmetic"
-            },
-            {
-                "id" : 71,
-                "department" : "MATH3",
-                "vanityName" : "Remedial Galois Field Arithmetic"
-            },
-        ],
-        links: [
-            {
-                source: 51,
-                target: 201,
-            },
-            {
-                source: 101,
-                target: 201,
-            },
-            {
-                source: 51,
-                target: 61,
-            },
-            {
-                source: 51,
-                target: 71,
-            },
-        ]
-    };
 
-        var nodes = graph.nodes,
+
+
+        var nodes = parsedNodes,
             nodeById = d3.map(nodes, function(d) { return d.id; }),
-            links = graph.links,
+            links = parsedEdges,
             bilinks = [];
 
         links.forEach(function(link) {
-            var s = link.source = nodeById.get(link.source),
-                t = link.target = nodeById.get(link.target);
-            links.push({source: s, target: t});
+            var s = link.source = nodeById.get(link.source.id),
+                t = link.target = nodeById.get(link.target.id);
             bilinks.push([s, t]);
         });
 
-        //Populate the map that keeps track of how many links a class node has
-        links.forEach(function(d){
-            if(linkMap.has(d.source.id))
-                linkMap.set(d.source.id, linkMap.get(d.source.id) + .5);
-            else
-                linkMap.set(d.source.id, .5);
-        });
 
         var link = zoomContainer.selectAll(".link")
                          .attr("stroke", "#000")
@@ -120,63 +78,79 @@ var svg = d3.select("svg"),
                         .data(nodes.filter(function(d) { return d.id; }))
                         .enter().append('g')
                         .attr("class", "node")
-                        .attr('id', function(d){return d.department;})
+                        .attr('id', function(d){return "node"+d.id.toString();})
                         .call(d3.drag()
                               .on("start", dragstarted)
                               .on("drag", dragged)
                               .on("end", dragended));
+
         zoomContainer.selectAll('.node').each(function(d){slozenPrikaz(d);});
 
     zoomContainer.selectAll('.node').on("mouseover", function(d) {
-        d3.select(".details").append('text').text(d.department +" "+ d.vanityName);
+        const keys = Object.keys(d);
+        let str = "";
+        keys.forEach(key => {
+            if(key == "id" || Array.isArray(d[key]) || key == "index" || key == "x" || key == "y" || key == "vy" || key == "vx"){
+                return;
+            }
+            str += key +": "+d[key] +"  ";
+
+        });
+
+        d3.select(".details").append('text').text(str);
     }).on("mouseout", function(d) {
         d3.select(".details").text("Current node: ");
     });
 
     function slozenPrikaz(d){
-      var duzina=150;
+      const keys = Object.keys(d);
+      var maxLen = d.name.length;
+      var duzina=maxLen*13;
 
       var textSize=10;
-      var visina=3*textSize;
+      var visina=keys.length*textSize;
       visina+=textSize;
 
-      d3.select("g#"+d.department).append('rect').
+      d3.select("g#"+"node"+d.id.toString()).append('rect').
       attr('x',0).attr('y',0).attr('width',duzina).attr('height',visina)
       .attr('fill','#3B4656');
       //Name
-      d3.select("g#"+d.department).append('text').attr('x',duzina/2).attr('y',10)
+      d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',duzina/2).attr('y',10)
       .attr('text-anchor','middle')
       .attr('font-size',textSize).attr('font-family','sans-serif')
-      .attr('fill','white').text(d.department);
+      .attr('fill','white').text(d.name);
 
       //Line
-      d3.select("g#"+d.department).append('line').
+      d3.select("g#"+"node"+d.id.toString()).append('line').
       attr('x1',0).attr('y1',2*textSize).attr('x2',duzina).attr('y2',2*textSize)
       .attr('stroke','white').attr('stroke-width',2);
 
-        //DESCRIPTION
-       d3.select("g#"+d.department).append('text').attr('x',10).attr('y',3*textSize)
-          .attr('text-anchor','start')
-          .attr('font-size',textSize).attr('font-family','sans-serif')
-          .attr('fill','white').text(d.vanityName);
-
+        var i = 3;
+        keys.forEach(key => {
+            if(key == "id" || key == "name"){
+                return;
+            }
+            let partOfDescription;
+            let value;
+            if(Array.isArray(d[key])){
+                value = d[key][0]
+            }else{
+                value = d[key]
+            }
+            if(value.length > maxLen*2){
+               partOfDescription = value.slice(0, (maxLen*2)-3);
+               partOfDescription += "..."
+            }else{
+                partOfDescription = value;
+            }
+            d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',5).attr('y',i*textSize)
+              .attr('text-anchor','start')
+              .attr('font-size',textSize).attr('font-family','sans-serif')
+              .attr('fill','white').text(key+": "+partOfDescription);
+            i+=1;
+        });
     }
 
-        //Unfade all nodes when whitespace is clicked
-        svg.on("click", function(){
-            d3.selectAll(".node")
-                .attr("opacity", "1");
-        });
-
-        //Force parameter buttons
-        d3.select("#forcesPlus")
-            .on("click", function(){
-            updateParameters(1);
-        });
-        d3.select("#forcesMinus")
-            .on("click", function(){
-            updateParameters(-1);
-        });
 
         node.append("title")
             .text(function(d) { return d.id; });
@@ -185,7 +159,7 @@ var svg = d3.select("svg"),
             .nodes(nodes)
             .on("tick", ticked);
 
-        simulation.force("link", d3.forceLink(links).id(d => d.id).distance(200).strength(1));
+        simulation.force("link", d3.forceLink(links).id(d => d.id).distance(1000).strength(1));
 
         function ticked() {
             link.attr('x1', function(d) { return d[0].x; })

@@ -1,3 +1,4 @@
+import json
 from typing import Optional, TypeVar
 
 class Graph:
@@ -16,6 +17,17 @@ class Graph:
 
     def nodes(self):
         return self._outgoing.keys()
+
+    def serialize_nodes(self):
+        nodes = list(self.nodes())
+        ret = []
+        for node in nodes:
+            ret.append(json.dumps(node._value))
+        return ret
+
+        # return [json.dumps(node._value) for node in nodes]
+    def serialize_edges(self):
+        return [json.dumps(edge.to_dict()) for edge in self.edges()]
 
     def edge_count(self):
         return sum(len(secondary_map) for secondary_map in self._outgoing.values())
@@ -55,6 +67,7 @@ class Graph:
         self._outgoing[u][v] = e
         self._incoming[v][u] = e
 
+
 class GraphEdge:
     def __init__(self, origin, desination, value):
         self._origin = origin
@@ -66,6 +79,9 @@ class GraphEdge:
 
     def value(self):
         return self._value
+
+    def to_dict(self):
+        return {"source":self._origin.node_value(), "target":self._destination.node_value(), "value": self._value}
 
     def __hash__(self):
         return hash((self._origin, self._destination))

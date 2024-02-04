@@ -1,7 +1,7 @@
 import os
 import sys
 
-from model.graph.graph import Graph
+from model.graph.graph import Graph, GraphNode
 from services.data_source_api import DataSourceAPI
 from tinywiki.scraper import get_scraped_dictionary
 from typing import Any, List, Dict
@@ -16,7 +16,7 @@ class WikipediaDataSource(DataSourceAPI):
     def get_graph(self, parsed_data: List[Dict[str, Any]]) -> Graph:
         graph = Graph()
         vertex_map = {}
-
+        i = 1
         for page_data in parsed_data:
             url = list(page_data.keys())[0]
             page_info = list(page_data.values())[0]
@@ -25,14 +25,15 @@ class WikipediaDataSource(DataSourceAPI):
             children = page_info["children"]
 
             node_value = {
+                "id":i,
                 "url": url,
                 "name": name,
                 "paragraphs": paragraphs,
                 "children": len(children)
             }
-
-            node = GraphNode(node_value)
-            vertex = graph.insert_node(node)
+            i+=1
+            # node = GraphNode(node_value)
+            vertex = graph.insert_node(node_value)
             vertex_map[url] = vertex
 
         for page_data in parsed_data:

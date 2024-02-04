@@ -1,11 +1,14 @@
+import json
 import os
 import sys
 
 from jinja2 import Environment, FileSystemLoader
+from model.graph.graph import Graph
 from services.visualizer_api import Visualizer
 
 class BlockVisualizer(Visualizer):
-    def visualize(self, graph):
+
+    def visualize(self, graph:Graph):
         # Specify the directory containing your Jinja2 templates
         current_directory = os.getcwd()
         # Get the parent directory (one level up)
@@ -20,5 +23,8 @@ class BlockVisualizer(Visualizer):
 
         template_name = 'block_graph.html'
         template = env.get_template(template_name)
-        rendered_template = template.render()
+        nodes = graph.serialize_nodes()
+        edges = graph.serialize_edges()
+        rendered_template = template.render({"nodes":json.dumps(nodes), "edges": json.dumps(edges)})
         return rendered_template
+        return None
