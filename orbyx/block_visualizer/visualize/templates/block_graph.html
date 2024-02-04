@@ -19,7 +19,7 @@
         <div class = "details">
             Current node:
         </div>
-        <svg width="2000" height="800">
+        <svg width="1200" height="800">
         </svg>
     </div>
 </div>
@@ -65,9 +65,6 @@ var svg = d3.select("svg"),
             bilinks.push([s, t]);
         });
 
-<!--        links.forEach(node => {-->
-<!--            alert(node.source.id.toString()+"-"+node.target.id.toString())-->
-<!--        });-->
 
         var link = zoomContainer.selectAll(".link")
                          .attr("stroke", "#000")
@@ -90,16 +87,28 @@ var svg = d3.select("svg"),
         zoomContainer.selectAll('.node').each(function(d){slozenPrikaz(d);});
 
     zoomContainer.selectAll('.node').on("mouseover", function(d) {
-        d3.select(".details").append('text').text(d.url +" - "+ d.name);
+        const keys = Object.keys(d);
+        let str = "";
+        keys.forEach(key => {
+            if(key == "id" || Array.isArray(d[key]) || key == "index" || key == "x" || key == "y" || key == "vy" || key == "vx"){
+                return;
+            }
+            str += key +": "+d[key] +"  ";
+
+        });
+
+        d3.select(".details").append('text').text(str);
     }).on("mouseout", function(d) {
         d3.select(".details").text("Current node: ");
     });
 
     function slozenPrikaz(d){
-      var duzina=d.url.length*5;
+      const keys = Object.keys(d);
+      var maxLen = d.name.length;
+      var duzina=maxLen*13;
 
       var textSize=10;
-      var visina=5*textSize;
+      var visina=keys.length*textSize;
       visina+=textSize;
 
       d3.select("g#"+"node"+d.id.toString()).append('rect').
@@ -116,38 +125,32 @@ var svg = d3.select("svg"),
       attr('x1',0).attr('y1',2*textSize).attr('x2',duzina).attr('y2',2*textSize)
       .attr('stroke','white').attr('stroke-width',2);
 
-        //DESCRIPTION
-        const partOfDescription = d.paragraphs[0].slice(0, d.url.length-3);
-        d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',10).attr('y',3*textSize)
-          .attr('text-anchor','start')
-          .attr('font-size',textSize).attr('font-family','sans-serif')
-          .attr('fill','white').text(d.url);
-       d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',10).attr('y',4*textSize)
-          .attr('text-anchor','start')
-          .attr('font-size',textSize).attr('font-family','sans-serif')
-          .attr('fill','white').text(partOfDescription +"...");
-       d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',10).attr('y',5*textSize)
-          .attr('text-anchor','start')
-          .attr('font-size',textSize).attr('font-family','sans-serif')
-          .attr('fill','white').text(d.id);
-
+        var i = 3;
+        keys.forEach(key => {
+            if(key == "id" || key == "name"){
+                return;
+            }
+            let partOfDescription;
+            let value;
+            if(Array.isArray(d[key])){
+                value = d[key][0]
+            }else{
+                value = d[key]
+            }
+            if(value.length > maxLen*2){
+               partOfDescription = value.slice(0, (maxLen*2)-3);
+               partOfDescription += "..."
+            }else{
+                partOfDescription = value;
+            }
+            d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',5).attr('y',i*textSize)
+              .attr('text-anchor','start')
+              .attr('font-size',textSize).attr('font-family','sans-serif')
+              .attr('fill','white').text(key+": "+partOfDescription);
+            i+=1;
+        });
     }
 
-<!--        //Unfade all nodes when whitespace is clicked-->
-<!--        svg.on("click", function(){-->
-<!--            d3.selectAll(".node")-->
-<!--                .attr("opacity", "1");-->
-<!--        });-->
-
-<!--        //Force parameter buttons-->
-<!--        d3.select("#forcesPlus")-->
-<!--            .on("click", function(){-->
-<!--            updateParameters(1);-->
-<!--        });-->
-<!--        d3.select("#forcesMinus")-->
-<!--            .on("click", function(){-->
-<!--            updateParameters(-1);-->
-<!--        });-->
 
         node.append("title")
             .text(function(d) { return d.id; });
