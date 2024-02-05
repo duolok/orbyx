@@ -1,16 +1,7 @@
 from typing import Any, Dict, List
 from services.core_api import CoreAPI
+from services.utils import *
 import pkg_resources
-
-''' This method will be removed once plugin pipeline is implemented. '''
-def load_plugins(oznaka):
-    plugins = []
-    for ep in pkg_resources.iter_entry_points(group=oznaka):
-        p = ep.load()
-        print("{} {}".format(ep.name, p))
-        plugin = p()
-        plugins.append(plugin)
-    return plugins
 
 class Engine(CoreAPI):
     def __init__(self):
@@ -22,11 +13,18 @@ class Engine(CoreAPI):
         self.visualizer_plugin = visualizer_plugin
 
     def send_data(self, graph):
-        wikipedia_data_source = load_plugins("orbyx_tinywiki")[0]
+        wikipedia_data_source = get_data_source_plugin_by_name("Tinywiki")
         parsed_data = wikipedia_data_source.parse_data("some link will be here")  
         graph = wikipedia_data_source.get_graph(parsed_data)
-        visualizer = load_plugins("generate_template")
-        return visualizer[0].visualize(graph)
+        visualizer = get_visualizer_plugin_by_name("Block Visualizer")
+        return visualizer.visualize(graph)
+
+    def get_data_sources() -> List[DataSourceAPI]:
+        return get_data_source_plugins()
+
+    def get_visualizers() -> List[Visualizer]:
+        return get_visualizer_plugins()
+
 
     def get_data(self, query_params: Dict[str, Any]):
         """Method to retrieve data from Django"""
