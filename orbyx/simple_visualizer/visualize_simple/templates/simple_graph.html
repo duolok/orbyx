@@ -1,0 +1,161 @@
+<style>
+
+.node {
+  cursor: pointer;
+  color: #3182bd;
+
+}
+
+.link {
+  fill: none;
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+</style>
+</br>
+<div class="center">
+    <div>
+        <div class = "details">
+            Current node:
+        </div>
+        <svg width="1200" height="800">
+        </svg>
+    </div>
+</div>
+<script>
+var loadedNodes = {{ nodes }};
+var loadedEdges = {{ edges }};
+var parsedNodes = [];
+loadedNodes.forEach(node => {
+    parsedNodes.push(JSON.parse(node))
+});
+var parsedEdges = [];
+loadedEdges.forEach(node => {
+    parsedEdges.push(JSON.parse(node))
+});
+
+var svg = d3.select("svg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
+
+    var zoomContainer = svg.call(d3.zoom().on("zoom", function () {
+        zoomContainer.attr("transform", d3.event.transform)
+    }))
+    .append("g");
+
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    var simulation = d3.forceSimulation()
+                        .force("charge", d3.forceManyBody().strength(-100))
+                        .force("center", d3.forceCenter(width / 2, height / 2));
+
+    var linkMap = d3.map();
+
+
+
+        var nodes = parsedNodes,
+            nodeById = d3.map(nodes, function(d) { return d.id; }),
+            links = parsedEdges,
+            bilinks = [];
+
+        links.forEach(function(link) {
+            var s = link.source = nodeById.get(link.source.id),
+                t = link.target = nodeById.get(link.target.id);
+            bilinks.push([s, t]);
+        });
+
+
+        var link = zoomContainer.selectAll(".link")
+                         .attr("stroke", "#000")
+                          .attr("stroke-opacity", 0.6)
+                        .data(bilinks)
+                        .enter().append("line")
+                        .attr("class", "link");
+
+
+        var node = zoomContainer.selectAll(".node")
+                        .data(nodes.filter(function(d) { return d.id; }))
+                        .enter().append('g')
+                        .attr("class", "node")
+                        .attr('id', function(d){return "node"+d.id.toString();})
+                        .call(d3.drag()
+                              .on("start", dragstarted)
+                              .on("drag", dragged)
+                              .on("end", dragended));
+
+        zoomContainer.selectAll('.node').each(function(d){simpleView(d);});
+
+    zoomContainer.selectAll('.node').on("mouseover", function(d) {
+        const keys = Object.keys(d);
+        let str = "";
+        keys.forEach(key => {
+            if(key == "id" || Array.isArray(d[key]) || key == "index" || key == "x" || key == "y" || key == "vy" || key == "vx"){
+                return;
+            }
+            str += key +": "+d[key] +"  ";
+
+        });
+
+        d3.select(".details").append('text').text(str);
+    }).on("mouseout", function(d) {
+        d3.select(".details").text("Current node: ");
+    });
+
+    function simpleView(d){
+
+        var textSize=10;
+        var radius = 35 + d.name.length*2
+
+        d3.select("g#"+"node"+d.id.toString()).append('circle').
+        attr('r',radius)
+        .attr('fill','#3B4656');
+        //Name
+        d3.select("g#"+"node"+d.id.toString()).append('text')
+        .attr('text-anchor','middle')
+        .attr('font-size',textSize).attr('font-family','sans-serif')
+        .attr('fill','white').text(d.name);
+
+    }
+
+
+        node.append("title")
+            .text(function(d) { return d.id; });
+
+        simulation
+            .nodes(nodes)
+            .on("tick", ticked);
+
+        simulation.force("link", d3.forceLink(links).id(d => d.id).distance(1000).strength(1));
+
+        function ticked() {
+            link.attr('x1', function(d) { return d[0].x; })
+            .attr('y1', function(d) { return d[0].y; })
+            .attr('x2', function(d) { return d[1].x; })
+            .attr('y2', function(d) { return d[1].y; });
+            node.attr("transform", positionNode);
+        }
+
+    function positionNode(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+    }
+
+    function dragstarted(d) {
+        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x, d.fy = d.y;
+    }
+
+    function dragged(d) {
+        d.fx = d3.event.x, d.fy = d3.event.y;
+    }
+
+    function dragended(d) {
+        if (!d3.event.active) simulation.alphaTarget(.01);
+        d.fx = null, d.fy = null;
+    }
+
+    function linkDistance(d){
+        console.log(d);
+    }
+
+</script>

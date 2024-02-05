@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 import xml.etree.ElementTree as ET
@@ -27,7 +28,18 @@ def load_graph_from_plugin(request):
     visualizers = get_visualizer_plugins()
     engine = get_engine()
 
-    visualization = engine.send_data(None, "AYO")
+    visualization = engine.send_data(None, "AYO", "simple")
     template = loader.get_template('orbyx/index.html')
     return HttpResponse(template.render({'main_view': mark_safe(visualization)}, request))
 
+def load_graph_simple(request):
+    engine = get_engine()
+    visualization = engine.send_data(None, "AYO", "simple")
+    template = loader.get_template('orbyx/index.html')
+    return HttpResponse(template.render({'main_view': mark_safe(visualization)}, request))
+
+def load_graph_block(request):
+    engine = get_engine()
+    visualization = engine.send_data(None, "AYO", "block")
+    template = loader.get_template('orbyx/index.html')
+    return HttpResponse(template.render({'main_view': mark_safe(visualization)}, request))

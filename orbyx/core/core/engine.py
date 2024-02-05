@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Dict, List
 from services.core_api import CoreAPI
 import pkg_resources
@@ -21,11 +22,19 @@ class Engine(CoreAPI):
         self.data_source_plugin = data_source_plugin
         self.visualizer_plugin = visualizer_plugin
 
-    def send_data(self, graph):
+    def send_data(self, graph, selected_visualizer):
         wikipedia_data_source = load_plugins("orbyx_tinywiki")[0]
-        parsed_data = wikipedia_data_source.parse_data("some link will be here")  
+        parsed_data = wikipedia_data_source.parse_data("some link will be here")
         graph = wikipedia_data_source.get_graph(parsed_data)
+        logging.info(parsed_data)
+        logging.info("Node number:" + str(graph.node_count()))
         visualizer = load_plugins("generate_template")
+
+        if selected_visualizer == "simple":
+            logging.info("Returned simple visualizer")
+            return visualizer[1].visualize(graph)
+
+        logging.info("Returned block visualizer")
         return visualizer[0].visualize(graph)
 
     def get_data(self, query_params: Dict[str, Any]):
