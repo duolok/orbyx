@@ -26,8 +26,11 @@
   --light-help: #f0edee;
 }
 
-
+html{
+height: 100%;
+}
 body {
+  height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -233,5 +236,7 @@ body {
     width: 100%;
     height: 85%;
     background-color: var(--light-canvas);
+    display: flex;
+    flex-direction: column;
   }
 
