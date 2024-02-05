@@ -292,58 +292,46 @@ label:last-child {
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
-/* Apply the base style to different button classes */
 .configure-plugins,
 .search-button,
 .styled-button {
-  /* Use the base button styles here */
   @extend .button;
 }
 
-/* Style for hover effect */
 .button:hover {
   background-color: var(--dark-hover);
   border-color: var(--light-help);
   color: white;
 }
 
-/* Style for active state (when clicked) */
 .button:active {
   background-color: var(--dark-primary);
   border-color: var(--dark-primary);
   color: white;
 }
 
-/* Additional styles for specific buttons if needed */
 .styled-select {
-  /* Add specific styles for select elements */
   padding: 6px 12px;
   border: none;
   background-color: var(--menu-background);
   color: white;
 }
 
-/* Example for configuring plugins */
 .configure-plugins {
-  /* Add specific styles for this button if needed */
   padding: 6px 30px;
   width: 40px;
   text-align: center;
 }
 
-/* Style for buttons inside the search menu */
 .search-menu-button {
-  /* Add specific styles for buttons inside the search menu if needed */
   padding: 6px 12px;
   border: none;
   background-color: var(--menu-background);
   color: var(--light-help);
 }
 
-/* Style for hover effect on search menu buttons */
 .search-menu-button:hover {
   background-color: var(--dark-hover);
   color: white;
 }
 
-/* Add more specific button styles as needed for your application */
