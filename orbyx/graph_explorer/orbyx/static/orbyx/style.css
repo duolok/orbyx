@@ -34,204 +34,316 @@ body {
   font-family: 'Bayon', sans-serif;
 }
 
-  .container {
-    display: flex;
-    flex-direction: vertical;
-    height: 100vh;
-    width: 100vw;
-  }
+.container {
+  display: flex;
+  flex-direction: vertical;
+  height: 100vh;
+  width: 100vw;
+}
 
-  .tiny-container{
-    min-width: 18vw;
-    min-height: 24vh;
-    background-color: var(--dark-primary);
-  }
+.tiny-container{
+  min-width: 18vw;
+  min-height: 24vh;
+  background-color: var(--dark-primary);
+}
 
-  .big-container {
-    width: 82vw;
-    min-height: 24vh;
-  }
+.big-container {
+  width: 82vw;
+  min-height: 24vh;
+}
 
-  .header {
-    display: block;
-    width: 100%;
-    height: 15%;
+.header {
+  display: block;
+  width: 100%;
+  height: 15%;
 
-  }
+}
 
-  .header-main {
-    width: 100%;
-    height: 60%;
-    color: white;
-    text-transform: uppercase;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3em;
-  }
+.header-main {
+  width: 100%;
+  height: 60%;
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3em;
+}
 
-  .header-buttons {
-    display: flex;
-    width: 99%;
-    background-color: white;
-    height: 38%;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5em;
-  }
+.header-buttons {
+  display: flex;
+  width: 99%;
+  background-color: white;
+  height: 38%;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+}
 
-  .header-button {
-    text-decoration: none;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1; 
-    text-align: center;
-    background-color: var(--menu-background);
-    border: 1px solid var(--light-border);
-  }
+.header-button {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1; 
+  text-align: center;
+  background-color: var(--menu-background);
+  border: 1px solid var(--light-border);
+}
 
-  #simple-view-btn,
-  #block-view-btn {
-    width: 50%; 
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+#simple-view-btn,
+#block-view-btn {
+  width: 50%; 
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .header-button:hover {
-    background-color: var(--dark-hover);
-  }
+.header-button:hover {
+  background-color: var(--dark-hover);
+}
 
-  .mini-views { 
-    width: 100%;
-    height: 85%;
-    background-color: var(--light-canvas);
-  }
+.mini-views { 
+  width: 100%;
+  height: 85%;
+  background-color: var(--light-canvas);
+}
 
-  .tree-view {
-    width: 100%;
-    height:70%;
-    box-sizing: border-box;
-    border-right: 3px solid var(--dark-primary);
-  } 
+.tree-view {
+  width: 100%;
+  height:70%;
+  box-sizing: border-box;
+  border-right: 3px solid var(--dark-primary);
+} 
 
-  .bird-view {
-    width: 100%;
-    height:30%;
-    box-sizing: border-box;
-    border-top: 3px solid var(--dark-primary);
-    border-right: 3px solid var(--dark-primary);
-  }
+.bird-view {
+  width: 100%;
+  height:30%;
+  box-sizing: border-box;
+  border-top: 3px solid var(--dark-primary);
+  border-right: 3px solid var(--dark-primary);
+}
 
-  .queries { 
-    height: 15%;
-    width: 100%;
-    background-color:var(--menu-background);
-    display: flex;
-    flex-direction: column;
-  }
+.queries { 
+  height: 15%;
+  width: 100%;
+  background-color:var(--menu-background);
+  display: flex;
+  flex-direction: column;
+}
 
-  .search-settings {
-    position: relative;
-    width: 100%;
-    height: 40%;
-    color: var(--light-help);
-    border-bottom: 1px solid var(--light-help);
-    display: flex;
-    flex-direction: row;
-  }
+.search-settings {
+  position: relative;
+  width: 100%;
+  height: 40%;
+  color: var(--light-help);
+  border-bottom: 1px solid var(--light-help);
+  display: flex;
+  flex-direction: row;
+}
 
-  section {
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    font-family: monospace;
-    color: white;
-    padding: 1em;
-    margin: 0;
-  }
+section {
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  font-family: monospace;
+  color: white;
+  padding-left: 1em;
+  margin: 0;
+}
 
-  input {
-    color: inherit;
-    background-color: transparent;
-    border: 2px solid currentColor;
-    border-radius: 6px;
-    font-size: inherit;
-    line-height: inherit;
-    padding: 2px 6px;
-    margin: 0;
-  }
+input {
+  color: inherit;
+  background-color: transparent;
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 2px 6px;
+  margin: 0;
+}
 
-  input:focus {
-    outline: none;
-    box-shadow: 0 0 0 1px currentColor;
-  }
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px currentColor;
+}
 
-  label {
-    display: block;
-    margin-bottom: 4px;
-  }
+label {
+  display: block;
+  margin-bottom: 4px;
+}
 
-  label:last-child {
-    margin-top: 16px;
-  }
+label:last-child {
+  margin-top: 16px;
+}
 
-  .search-button {
-    height: 50px;
-    padding: 6px 30px;
-    width: 40px;
-    text-decoration: none;
-    color: white;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background-color: var(--menu-background);
-    border: 2px solid var(--light-help);
-    border-radius: 7px;
-  }
+.search-button {
+  padding: 6px 30px;
+  width: 40px;
+  text-decoration: none;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--menu-background);
+  border: 2px solid var(--light-help);
+  border-radius: 7px;
+}
 
-  .search-button:hover{
-    background-color: var(--dark-hover);
-  }
+.search-button:hover{
+  background-color: var(--dark-hover);
+}
 
-  .search-buttons-container {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
+.search-buttons-container {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
-  .search-button {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
+.search-button {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
-  .search-menu {
-    color: var(--light-help);
-    padding: 0em 0.5em;
-    font-size: 1em;
-  }
+.search-menu {
+  color: var(--light-help);
+  padding: 0em 0.5em;
+  font-size: 1em;
+}
 
-  .search-menu:hover {
-    color: var(--dark-hover);
-  }
+.search-menu:hover {
+  color: var(--dark-hover);
+}
 
-  .filters {
-    height: 50px;
-    border-bottom: 2px solid var(--light-help);
-  }
+.filters section {
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+}
 
-  .complex-view {
-    width: 100%;
-    height: 85%;
-    background-color: var(--light-canvas);
-  }
+.filter-form {
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+}
 
+.filter-form span, .filter-form input, .filter-form a {
+  white-space: nowrap; 
+}
+
+.filter-form input[type="text"] {
+  max-width: 100px; 
+}
+
+.search-button {
+  margin-left: auto; 
+}
+
+.complex-view {
+  width: 100%;
+  height: 85%;
+}
+
+.configure-plugins {
+  padding: 6px 30px;
+  width: 40px;
+  text-decoration: none;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--menu-background);
+  border: 2px solid var(--light-help);
+  border-radius: 7px;
+}
+
+.styled-select, .styled-button {
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: var(--menu-background);
+  color: white;
+  border: 1px solid var(--light-border);
+  cursor: pointer;
+}
+
+
+.styled-select:hover, .styled-button:hover, .configure-plugins:hover {
+  background-color: var(--dark-hover);
+}
+
+/* Define a base style for buttons */
+.button {
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: var(--menu-background);
+  color: white;
+  border: 1px solid var(--light-border);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Apply the base style to different button classes */
+.configure-plugins,
+.search-button,
+.styled-button {
+  /* Use the base button styles here */
+  @extend .button;
+}
+
+/* Style for hover effect */
+.button:hover {
+  background-color: var(--dark-hover);
+  border-color: var(--light-help);
+  color: white;
+}
+
+/* Style for active state (when clicked) */
+.button:active {
+  background-color: var(--dark-primary);
+  border-color: var(--dark-primary);
+  color: white;
+}
+
+/* Additional styles for specific buttons if needed */
+.styled-select {
+  /* Add specific styles for select elements */
+  padding: 6px 12px;
+  border: none;
+  background-color: var(--menu-background);
+  color: white;
+}
+
+/* Example for configuring plugins */
+.configure-plugins {
+  /* Add specific styles for this button if needed */
+  padding: 6px 30px;
+  width: 40px;
+  text-align: center;
+}
+
+/* Style for buttons inside the search menu */
+.search-menu-button {
+  /* Add specific styles for buttons inside the search menu if needed */
+  padding: 6px 12px;
+  border: none;
+  background-color: var(--menu-background);
+  color: var(--light-help);
+}
+
+/* Style for hover effect on search menu buttons */
+.search-menu-button:hover {
+  background-color: var(--dark-hover);
+  color: white;
+}
+
+/* Add more specific button styles as needed for your application */
