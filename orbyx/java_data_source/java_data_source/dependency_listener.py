@@ -1,35 +1,45 @@
 from antlr4 import *
-from pprint import pprint
-from api.model.graph import graph
+from model.graph import graph
 
 class DependencyListener(ParseTreeListener):
     def __init__(self):
         self.graph = graph.Graph()
+        self.nodes = {}
         self.current_class = None
         self.current_package = None
+        self.data = {}
+        self.edges = []
+        
     def enterInterfaceDeclaration(self, ctx):
         
         class_name = ctx.identifier().getText()
         self.current_class = class_name
-        self.graph.add_node(class_name)
+        self.insert_node(class_name, self.data)
         if(self.current_package):
-            self.graph.add_edge(self.current_package, class_name)
+            self.insert_edge(self.current_package, class_name)
     def enterClassDeclaration(self, ctx):
         
         class_name = ctx.identifier().getText()
         self.current_class = class_name
-        self.graph.add_node(class_name)
+        self.insert_node(class_name, self.data)
 
         if(self.current_package):
-            self.graph.add_edge(self.current_package, class_name)
+            self.insert_edge(self.current_package, class_name)
+
+    def enterFieldDeclaration(self, ctx):
+        if ctx.typeType().primitiveType() == None:
+            self.nodes[self.current_class]["data"]["fields"].append([ctx.typeType().classOrInterfaceType().getText(), ctx.variableDeclarators().variableDeclarator(0).variableDeclaratorId().identifier().getText()])
+            return
+        self.nodes[self.current_class]["data"]["fields"].append([ctx.typeType().primitiveType().getText(), ctx.variableDeclarators().variableDeclarator(0).variableDeclaratorId().identifier().getText()])
+
     def enterPackageDeclaration(self, ctx):
         self.current_package = '.'.join(identifier.getText() for identifier in  ctx.qualifiedName().identifier())
 
-        self.graph.add_node(self.current_package)
+        self.insert_node(self.current_package, self.data)
     def exitPackageDeclaration(self, ctx):
         for subPackage in self.current_package.split("."):
-            if subPackage in self.graph.nodes and subPackage != self.current_package:
-                self.graph.add_edge(subPackage, self.current_package)
+            if subPackage in self.graph.nodes() and subPackage != self.current_package:
+                self.insert_edge(subPackage, self.current_package)
     def exitClassDeclaration(self, ctx):
         self.current_class = None
     def exitInterfaceDeclaration(self, ctx):
@@ -38,11 +48,23 @@ class DependencyListener(ParseTreeListener):
         if self.current_class is not None:
             type_name = ctx.getText()
             if '.' in type_name:
-                # Extract the class name from the fully qualified name
                 type_name = type_name.split('.')[-1]
-            if type_name != self.current_class:
-                self.graph.add_edge(self.current_class, type_name)
-                print(self.current_class, type_name)
+            if type_name != self.current_class and type_name!='void':
+                self.insert_edge(self.current_class, type_name)
 
-
-
+    def insert_node(self, name, data):
+        if(name in self.nodes.keys()):
+            return
+        data["name"] = name
+        self.nodes[name] = {
+            "node" : None,
+            "data" : {
+                "name" : name
+            }
+        }
+        self.nodes[name]["data"]["fields"] = []
+    def getNode(self, name):
+        return self.nodes[name]["node"]
+    def insert_edge(self, name1, name2):
+        self.edges.append([name1, name2])
+     

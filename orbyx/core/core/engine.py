@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
-from api.services.core_api import CoreAPI
-from api.services.core_api import Graph
+from services.core_api import CoreAPI
+from services.core_api import Graph
 import pkg_resources
 
 ''' This method will be removed once plugin pipeline is implemented. '''

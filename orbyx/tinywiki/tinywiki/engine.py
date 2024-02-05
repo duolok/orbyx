@@ -1,7 +1,7 @@
 import os
 import sys
 
-from model.graph.graph import Graph
+from model.graph.graph import Graph, GraphNode
 from services.data_source_api import DataSourceAPI
 from tinywiki.scraper import get_scraped_dictionary
 from typing import Any, List, Dict
