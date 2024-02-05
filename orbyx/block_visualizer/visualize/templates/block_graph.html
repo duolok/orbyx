@@ -12,18 +12,27 @@
   stroke-width: 1.5px;
 }
 
+<!--#svg-container{-->
+<!--display: flex;-->
+<!--}-->
+
 </style>
 </br>
-<div class="center">
-    <div>
-        <div class = "details">
-            Current node:
-        </div>
-        <svg width="1200" height="800">
-        </svg>
-    </div>
+<div class = "details" height="30px">
+    Current node:
 </div>
 <script>
+var containerWidth = document.getElementById("svg-container").clientWidth;
+var containerHeight = document.getElementById("svg-container").clientHeight;
+
+// Set up SVG canvas
+var svgContainer = d3.select("#svg-container")
+  .append("svg")
+  .attr("width", containerWidth)
+  .attr("height", containerHeight)
+  .attr("preserveAspectRatio", "xMidYMid meet")
+  .attr("viewBox", "0 0 " + containerWidth + " " + containerHeight);
+
 var loadedNodes = {{ nodes }};
 var loadedEdges = {{ edges }};
 var parsedNodes = [];
@@ -90,7 +99,7 @@ var svg = d3.select("svg"),
         const keys = Object.keys(d);
         let str = "";
         keys.forEach(key => {
-            if(key == "id" || Array.isArray(d[key]) || key == "index" || key == "x" || key == "y" || key == "vy" || key == "vx"){
+            if(key == "id" || Array.isArray(d[key]) || key == "index" || key == "x" || key == "y" || key == "vy" || key == "vx" || key == "fx" || key == "fy"){
                 return;
             }
             str += key +": "+d[key] +"  ";
@@ -190,5 +199,7 @@ var svg = d3.select("svg"),
     function linkDistance(d){
         console.log(d);
     }
+
+
 
 </script>
