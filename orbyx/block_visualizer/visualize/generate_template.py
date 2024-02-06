@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import sys
 
@@ -25,6 +26,8 @@ class BlockVisualizer(Visualizer):
         template = env.get_template(template_name)
         nodes = graph.serialize_nodes()
         edges = graph.serialize_edges()
+        logging.info(nodes)
+        logging.info(edges)
         rendered_template = template.render({"nodes":json.dumps(nodes), "edges": json.dumps(edges)})
         return rendered_template
         return None

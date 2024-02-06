@@ -17,13 +17,13 @@ class Engine(CoreAPI):
         self.data_source_plugin = None
         self.visualizer_plugin = None
 
-    def _set_plugins(data_source_plugin, visualizer_plugin):
+    def _set_plugins(self, data_source_plugin, visualizer_plugin):
         self.data_source_plugin = data_source_plugin
         self.visualizer_plugin = visualizer_plugin
 
     def send_data(self, graph):
         wikipedia_data_source = load_plugins("orbyx_tinywiki")[0]
-        parsed_data = wikipedia_data_source.parse_data("some link will be here")  
+        parsed_data = wikipedia_data_source.parse_data("some link will be here")
         graph = wikipedia_data_source.get_graph(parsed_data)
         visualizer = load_plugins("generate_template")
         return visualizer[0].visualize(graph)
