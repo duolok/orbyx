@@ -1,4 +1,3 @@
-import logging
 import os
 import sys
 import xml.etree.ElementTree as ET
@@ -6,40 +5,37 @@ from django.utils.safestring import mark_safe
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import loader, Context
-
 import pkg_resources
 
-def index(request):
-    template = loader.get_template('orbyx/index.html')
-    return HttpResponse(template.render({}, request))
-
-def get_data_source_plugins():
-    return [ep.load() for ep in pkg_resources.iter_entry_points(group='orbyx_data_source_plugin')]
-
-def get_visualizer_plugins():
-    return [ep.load() for ep in pkg_resources.iter_entry_points(group='orbyx_visualizer_plugin')]
 
 def get_engine():
     return next(pkg_resources.iter_entry_points('core')).load()
 
-'''This will be replaced once action for applying data source and visualization are implemented.'''
-def load_graph_from_plugin(request):
+def index(request):
     data_sources = get_data_source_plugins()
     visualizers = get_visualizer_plugins()
-    engine = get_engine()
 
-    visualization = engine.send_data(None, "AYO", "simple")
-    template = loader.get_template('orbyx/index.html')
-    return HttpResponse(template.render({'main_view': mark_safe(visualization)}, request))
+    print("Data Sources:", data_sources)
+    print("Visualizers:", visualizers)
 
-def load_graph_simple(request):
-    engine = get_engine()
-    visualization = engine.send_data(None, "AYO", "simple")
-    template = loader.get_template('orbyx/index.html')
-    return HttpResponse(template.render({'main_view': mark_safe(visualization)}, request))
+    context = {
+        'data_sources': data_sources,
+        'visualizers': visualizers,
+    }
 
-def load_graph_block(request):
+    return render(request, 'orbyx/index.html', context)
+
+def load_graph_from_plugin(request):
     engine = get_engine()
-    visualization = engine.send_data(None, "AYO", "block")
-    template = loader.get_template('orbyx/index.html')
-    return HttpResponse(template.render({'main_view': mark_safe(visualization)}, request))
+    data_sources = engine.get_data_sources()
+    visualizers = engine.get_visualizers()
+
+    visualization = engine.send_data(None, "Example Visualization Data")
+    
+    context = {
+        'main_view': mark_safe(visualization), 
+        'data_sources': data_sources,
+        'visualizers': visualizers,
+    }
+    
+    return render(request, 'orbyx/index.html', context)

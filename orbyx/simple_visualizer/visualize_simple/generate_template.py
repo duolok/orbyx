@@ -8,9 +8,11 @@ from services.visualizer_api import Visualizer
 
 class SimpleVisualizer(Visualizer):
 
-    @property
-    def name(self) -> str:
-        return "Simple Visualizer"
+    def __init__(self):
+        self.name = "Simple Visualizer"
+
+    def get_name(self) -> str:
+        return self.name
     def visualize(self, graph:Graph):
         # Specify the directory containing your Jinja2 templates
         current_directory = os.getcwd()

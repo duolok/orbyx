@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
+from services.data_source_api import DataSourceAPI
+from services.visualizer_api import Visualizer
 from model.graph.graph import *
 
 class CoreAPI(ABC):
@@ -26,6 +28,16 @@ class CoreAPI(ABC):
     @abstractmethod
     def _init_graph(self) -> Graph:
         """Abstract method to initialize a graph"""
+        pass
+
+    @abstractmethod
+    def get_data_sourcs() -> List[DataSourceAPI]:
+        """ Abstract method for getting data source plugins"""
+        pass
+
+    @abstractmethod
+    def get_visualizers() -> List[Visualizer]:
+        """ Abstract method for getting data source plugins"""
         pass
     
     @abstractmethod

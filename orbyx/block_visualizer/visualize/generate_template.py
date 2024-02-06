@@ -8,9 +8,11 @@ from services.visualizer_api import Visualizer
 
 class BlockVisualizer(Visualizer):
 
-    @property
-    def name(self) -> str:
-        return "Block Visualizer"
+    def __init__(self):
+        self.name = "Block Visualizer"
+
+    def get_name(self) -> str:
+        return self.name
 
     def visualize(self, graph:Graph):
         # Specify the directory containing your Jinja2 templates

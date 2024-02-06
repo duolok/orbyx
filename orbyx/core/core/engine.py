@@ -1,17 +1,7 @@
-import logging
 from typing import Any, Dict, List
 from services.core_api import CoreAPI
+from services.utils import *
 import pkg_resources
-
-''' This method will be removed once plugin pipeline is implemented. '''
-def load_plugins(oznaka):
-    plugins = []
-    for ep in pkg_resources.iter_entry_points(group=oznaka):
-        p = ep.load()
-        print("{} {}".format(ep.name, p))
-        plugin = p()
-        plugins.append(plugin)
-    return plugins
 
 class Engine(CoreAPI):
     def __init__(self):
@@ -22,20 +12,19 @@ class Engine(CoreAPI):
         self.data_source_plugin = data_source_plugin
         self.visualizer_plugin = visualizer_plugin
 
-    def send_data(self, graph, selected_visualizer):
-        wikipedia_data_source = load_plugins("orbyx_tinywiki")[0]
-        parsed_data = wikipedia_data_source.parse_data("some link will be here")
+    def send_data(self, graph):
+        wikipedia_data_source = get_data_source_plugin_by_name("Tinywiki")
+        parsed_data = wikipedia_data_source.parse_data("some link will be here")  
         graph = wikipedia_data_source.get_graph(parsed_data)
-        logging.info(parsed_data)
-        logging.info("Node number:" + str(graph.node_count()))
-        visualizer = load_plugins("generate_template")
+        visualizer = get_visualizer_plugin_by_name("Simple Visualizer")
+        return visualizer.visualize(graph)
 
-        if selected_visualizer == "simple":
-            logging.info("Returned simple visualizer")
-            return visualizer[1].visualize(graph)
+    def get_data_sources() -> List[DataSourceAPI]:
+        return get_data_source_plugins()
 
-        logging.info("Returned block visualizer")
-        return visualizer[0].visualize(graph)
+    def get_visualizers() -> List[Visualizer]:
+        return get_visualizer_plugins()
+
 
     def get_data(self, query_params: Dict[str, Any]):
         """Method to retrieve data from Django"""
