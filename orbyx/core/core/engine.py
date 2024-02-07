@@ -19,7 +19,7 @@ class Engine(CoreAPI):
         parsed_data = wikipedia_data_source.parse_data("some link will be here")  
         graph = wikipedia_data_source.get_graph(parsed_data)
         self.data_tree = graph
-        visualizer = get_visualizer_plugin_by_name("Block Visualizer")
+        visualizer = get_visualizer_plugin_by_name("Simple Visualizer")
         return visualizer.visualize(graph)
 
     def send_data_tree(self):

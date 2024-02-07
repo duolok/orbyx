@@ -56,6 +56,6 @@ class CoreAPI(ABC):
         pass
 
     @abstractmethod
-    def send_data(self, graph: str):
+    def send_data(self, graph: str, vizualier:str):
         """Abstract method that will save current version of the graph"""
         pass
