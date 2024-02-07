@@ -8,6 +8,12 @@ from tinywiki.scraper import get_scraped_dictionary
 from typing import Any, List, Dict
 
 class WikipediaDataSource(DataSourceAPI):
+    def __init__(self):
+        self.name = "Tinywiki"
+
+    def get_name(self) -> str:
+        return self.name
+    
     def parse_data(self, data: Any) -> List[Dict[str, Any]]:
         #start_url = data[0]
         start_url = "https://en.wikipedia.org/wiki/Rust_(programming_language)"
