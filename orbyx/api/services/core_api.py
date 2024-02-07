@@ -9,7 +9,12 @@ class CoreAPI(ABC):
     def send_data(self, Graph) -> None:
         """Abstract method to send data to Django"""
         pass
-    
+
+    @abstractmethod
+    def send_data_tree(self, Graph) -> None:
+        """Abstract method to send data to Django"""
+        pass
+
     @abstractmethod
     def get_data(self, params:  Dict[str, Any]):
         """Abstract method to retrieve data from Django"""

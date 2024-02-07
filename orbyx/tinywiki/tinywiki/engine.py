@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -17,6 +18,8 @@ class WikipediaDataSource(DataSourceAPI):
         #start_url = data[0]
         start_url = "https://en.wikipedia.org/wiki/Rust_(programming_language)"
         scraped_dictionary = get_scraped_dictionary(start_url)
+        logging.info("Scraped dictionary: ")
+        logging.info(scraped_dictionary)
         return [{key: val} for key, val in scraped_dictionary.items()]
 
     def get_graph(self, parsed_data: List[Dict[str, Any]]) -> Graph:

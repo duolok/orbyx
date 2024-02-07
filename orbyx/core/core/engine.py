@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Dict, List
 from services.core_api import CoreAPI
 from services.utils import *
@@ -7,6 +8,7 @@ class Engine(CoreAPI):
     def __init__(self):
         self.data_source_plugin = None
         self.visualizer_plugin = None
+        self.data_tree = None
 
     def _set_plugins(data_source_plugin, visualizer_plugin):
         self.data_source_plugin = data_source_plugin
@@ -16,8 +18,17 @@ class Engine(CoreAPI):
         wikipedia_data_source = get_data_source_plugin_by_name("Tinywiki")
         parsed_data = wikipedia_data_source.parse_data("some link will be here")  
         graph = wikipedia_data_source.get_graph(parsed_data)
+        self.data_tree = graph
         visualizer = get_visualizer_plugin_by_name("Simple Visualizer")
         return visualizer.visualize(graph)
+
+    def send_data_tree(self):
+        wikipedia_data_source = get_data_source_plugin_by_name("Tinywiki")
+        parsed_data = wikipedia_data_source.parse_data("some link will be here")
+        graph = wikipedia_data_source.get_graph(parsed_data)
+        logging.info("GRAF: ")
+        logging.info(graph)
+        return graph
 
     def get_data_sources() -> List[DataSourceAPI]:
         return get_data_source_plugins()
