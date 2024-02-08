@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bayon&family=Rubik&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js"></script>
     <title>Orbyx - Graph Explorer</title>
-    <link rel="stylesheet" href="{% static 'orbyx/style.css' %}">
+    <link rel="stylesheet" href="{% static 'orbyx/style.css' %}?{% now "U" %}">
   </head>
   <body>
     <div class="container">
@@ -21,7 +21,7 @@
             <span class="header-text"> orbyx </span>
           </div>
           <div class="header-buttons">
-            <a id="simple-view-btn" class="header-button" href="#">Simple View</a>
+            <a id="simple-view-btn" class="header-button" href="#"> View</a>
             <a id="block-view-btn" class="header-button" href="#">Block View</a>
           </div>
         </div>
@@ -43,27 +43,29 @@
           <div class="search-settings">
 
             <form class="filter-form" style="display: flex; padding: 1em; align-items: center; gap: 10px;">
-
               <label for="dropdown1">Data Source:</label>
-              <select id="dropdown1">
+              <select id="dropdown1" name="data_source">
                 {% for source in data_sources %}
                 <option value="{{ source.name }}">{{ source.name }}</option>
                 {% endfor %}
               </select>
 
               <label for="dropdown2">Visualizer:</label>
-              <select id="dropdown2">
+              <select id="dropdown2" name="visualizer">
                 {% for visualizer in visualizers %}
                 <option value="{{ visualizer.name }}">{{ visualizer.name }}</option>
                 {% endfor %}
               </select>
 
-              <a class="configure-plugins" href="#">Configure</a>
+              <button type="submit" class="configure-plugins">Configure</button>
             </form>
 
 
             <div class="search-buttons-container">
-              <a class="search-menu" href="#"> <span class="material-symbols-outlined"> add </span></a>
+
+
+              <button style="all:unset; cursor: pointer" type="submit" class="search-menu" id="addWorkspaceButton"> <span class="material-symbols-outlined"> add </span></button>
+
               <a class="search-menu" id="dark-mode-switch" href="#" onclick="changeCanvasStyle();"> <span class="material-symbols-outlined"> dark_mode </span></a>
             </div>
           </div>
@@ -92,8 +94,49 @@
           {{main_view}}
         </div>
 
+        <div id="tabs-view">
+            {% for workspace in workspaces %}
+              <div class="tab">
+                <p>{{ workspace }}</p>
+              </div>
+            {% endfor %}
+        </div>
+
       </div>
     </div>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <form style="display: flex; flex-direction: column; align-items: center; gap: 10px;"
+              action="{% url 'add_workspace' %}" method="post">
+              {% csrf_token %}
+              <div class="modal-form" style="display: flex; flex-direction: row; gap: 15px;">
+                  <label style="width: 150px; font-size: large; " for="dropdown-data-sources">Data Source:</label>
+                  <select style="width: 250px; color: white; font-weight: bold; font-size: medium; cursor: pointer; background-color: var(--menu-background);" id="dropdown-data-sources" name="data_source">
+                    {% for source in data_sources %}
+                      <option value="{{ source.name }}">{{ source.name }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
+
+              <div style="display: flex; flex-direction: row; gap: 15px;" >
+                <label style="width: 150px; font-size: large; " for="dropdown-visualizers">Visualizer:</label>
+                <select style="width: 250px; color: white; font-weight: bold; font-size: medium; cursor:pointer; background-color: var(--menu-background);" id="dropdown-visualizers" name="visualizer">
+                  {% for visualizer in visualizers %}
+                    <option value="{{ visualizer.name }}">{{ visualizer.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div style="display: flex; flex-direction: row; gap: 15px; margin-top: 15px;">
+                <p style="width: 150px"></p>
+                <button type="submit" class="configure-plugins" style="width: 250px; cursor: pointer; font-size: large; text-transform: uppercase; font-family: 'Bayon', sans-serif; padding-top: 2px; padding-bottom: 2px">Add workspace</button>
+              </div>
+            </form>
+      </div>
+    </div>
+
     <script>
       function changeCanvasStyle() {
         var canvasElements = document.querySelectorAll('canvas');
@@ -110,4 +153,7 @@
       }
     </script>
   </body>
+<footer>
+  <script src="{% static "orbyx/handle_modal.js" %}"></script>
+</footer>
 </html>

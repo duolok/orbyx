@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Dict, List
 from services.core_api import CoreAPI
 from services.utils import *
@@ -7,6 +8,7 @@ class Engine(CoreAPI):
     def __init__(self):
         self.data_source_plugin = None
         self.visualizer_plugin = None
+        self.workspaces = {"Workspace 1": {}, "Workspace 2": {}}
 
     def _set_plugins(data_source_plugin, visualizer_plugin):
         self.data_source_plugin = data_source_plugin
@@ -56,3 +58,20 @@ class Engine(CoreAPI):
         # Implement caching graph logic
         pass
 
+    def configure_worspace(self):
+        """Method to configure the"""
+        pass
+
+    def update_workspaces(self):
+        """Method to update workspace every time the graph is updated"""
+        pass
+
+    def change_current_workspaces(self):
+        """Method to change current workspaces"""
+        pass
+
+    def get_workspaces(self):
+        """Method to get all workspaces"""
+        logging.info("OVDE SAM")
+        workspaces = {"Workspace 1": {}, "Workspace 2": {}}
+        return workspaces.keys()

@@ -54,3 +54,8 @@ class CoreAPI(ABC):
     def send_data(self, graph: str):
         """Abstract method that will save current version of the graph"""
         pass
+
+    @abstractmethod
+    def get_workspaces(self):
+        """Method to get all workspaces"""
+        pass

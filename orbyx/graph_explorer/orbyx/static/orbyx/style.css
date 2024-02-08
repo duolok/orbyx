@@ -455,7 +455,32 @@ label:last-child {
 
 .complex-view {
   width: 100%;
-  height: 85%;
+  height: 80%;
+}
+
+#tabs-view{
+  width: 100%;
+  height: 5%;
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+  background-color: var(--light-canvas);
+  border-top: 3px solid var(--dark-primary);
+}
+
+.tab {
+  cursor: pointer;
+  padding: 5px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.tab:hover{
+  background-color: var(--dark-hover);
 }
 
 .configure-plugins {
@@ -540,4 +565,43 @@ label:last-child {
   background-color: var(--dark-hover);
   color: white;
 }
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+  }
+
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: var(--menu-background);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    color: white;
+  }
+
+  /* Close Button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
 

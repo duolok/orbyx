@@ -12,6 +12,7 @@ def get_engine():
     return next(pkg_resources.iter_entry_points('core')).load()
 
 def index(request):
+    engine = get_engine()
     data_sources = get_data_source_plugins()
     visualizers = get_visualizer_plugins()
 
@@ -20,7 +21,7 @@ def index(request):
 
     context = {
         'data_sources': data_sources,
-        'visualizers': visualizers,
+        'visualizers': visualizers
     }
 
     return render(request, 'orbyx/index.html', context)
@@ -29,6 +30,7 @@ def load_graph_from_plugin(request):
     engine = get_engine()
     data_sources = engine.get_data_sources()
     visualizers = engine.get_visualizers()
+    workspaces = engine.get_workspaces(engine)
 
     visualization = engine.send_data(None, "Example Visualization Data")
     
@@ -36,6 +38,13 @@ def load_graph_from_plugin(request):
         'main_view': mark_safe(visualization), 
         'data_sources': data_sources,
         'visualizers': visualizers,
+        'workspaces': workspaces
     }
     
     return render(request, 'orbyx/index.html', context)
+
+
+def add_workspace(request):
+    data_source = request.POST.get('data_source')
+    visualizer = request.POST.get('visualizer')
+    return HttpResponse("Chosen data source: {} and visualizer: {}".format(data_source, visualizer))
