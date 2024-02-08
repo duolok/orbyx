@@ -147,50 +147,9 @@ class SearchProvider():
             self.working_graph.insert_node(node.node_value())
         self.sub_graph = self.working_graph
         self.back_stack.append([["F", search_term], removed_edges])
-
-   
-g = Graph()
-
-n1 = g.insert_node({"n" : "aa", "a" : 1})
-n2 = g.insert_node({"n" : "ab", "a" : 2})
-n3 = g.insert_node({"n" : "bb", "a" : 3})
-n4 = g.insert_node({"n" : "bc", "a" : 4})
-
-g.insert_edge(n1, n2, 1)
-g.insert_edge(n1, n3, 2)
-g.insert_edge(n1, n4, 3)
-g.insert_edge(n2, n3, 4)
-g.insert_edge(n2, n4, 5)
-g.insert_edge(n3, n4, 6)
-sp = SearchProvider(g)
-
-sp.filter("a > 1")
-for node in sp.sub_graph.nodes():
-    print(node)
-for edge in sp.sub_graph.edges():
-    print(edge)
-print("==================")
-sp.search("c")
-
-for node in sp.sub_graph.nodes():
-    print(node)
-for edge in sp.sub_graph.edges():
-    print(edge)
-print("==================")
-
-sp.undo()
-
-for node in sp.sub_graph.nodes():
-    print(node)
-for edge in sp.sub_graph.edges():
-    print(edge)
-    
-print("==================")
-
-sp.reset()
-
-for node in sp.sub_graph.nodes():
-    print(node)
-for edge in sp.sub_graph.edges():
-    print(edge)
-    
+    def reinitialize(self):
+        for operation in self.back_stack:
+            if operation[0] == "F":
+                self.filter(operation[1])
+            elif operation[0] == "S":
+                self.search(operation[1])

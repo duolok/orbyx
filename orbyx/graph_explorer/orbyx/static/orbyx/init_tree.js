@@ -75,8 +75,8 @@ function refresh(){
                 console.log("success");
                 console.log(data);
                 document.getElementById("svg-container").innerHTML = ''
-                document.getElementById("svg-container").innerHTML = data["visualization"]
-                console.log(document.getElementById("svg-container").innerHTML)
+                const scriptEl = document.createRange().createContextualFragment(data["visualization"]);
+                document.getElementById("svg-container").append(scriptEl);
             },
             error: function(e){
                 console.error("search failed");
