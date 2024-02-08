@@ -46,8 +46,12 @@ class CoreAPI(ABC):
         pass
     
     @abstractmethod
-    def _filter(self, graph: Graph, filter_criteria: Dict[str, Any]) -> Graph:
+    def _filter(self, filter: str) -> Graph:
         """Abstract method to apply filters to the graph"""
+        pass
+    @abstractmethod
+    def _search(self, term: str) -> Graph:
+        """Abstract method to apply search to the graph"""
         pass
     
     @abstractmethod
@@ -59,3 +63,12 @@ class CoreAPI(ABC):
     def send_data(self, graph: str, vizualier:str):
         """Abstract method that will save current version of the graph"""
         pass
+    @abstractmethod
+    def reset_search(self):
+        """Abstract method that will reset search parameters"""
+        pass
+    @abstractmethod
+    def refresh_view(self):
+        """Abstract method that will refresh main view"""
+        pass
+    

@@ -20,8 +20,146 @@ var tree = () => {
 }
 
 tree();
+terms = []
+function addTerm(term){
+    str = ""
+    for (t of terms){
+        str += t + ", "
+    }
+    str += term
+    terms.push(term)
+    document.getElementById('filters_span').innerHTML = ''
+    document.getElementById('filters_span').innerHTML += str;
+}
+
+function popTerm(){
+    terms.pop()
+    str = ""
+    for (t of terms){
+        str += t + ", "
+    }
+    
+    document.getElementById('filters_span').innerHTML = ''
+    document.getElementById('filters_span').innerHTML = str;
+}
+function search(){
+    console.log(document.getElementById('search_box'))
+    term = document.getElementById('search_box').value;
+    $.ajax(
+        {
+            method: "GET",
+            url: "http://localhost:8000/orbyx/search/" + term,
+            success: function(data){
+                console.log("success");
+                console.log(data);
+                generate_json(data);
+                addTerm(term)
+                refresh();
+
+                
+            },
+            error: function(){
+                console.error("search failed");
+            }
+        }
+    );
+  } 
+var searchButton = document.getElementById('search_button');
+searchButton.onclick = search
+function refresh(){
+    $.ajax(
+        {
+            method: "GET",
+            url: "http://localhost:8000/orbyx/refresh",
+            success: function(data){
+                console.log("success");
+                console.log(data);
+                document.getElementById("svg-container").innerHTML = ''
+                const scriptEl = document.createRange().createContextualFragment(data["visualization"]);
+                document.getElementById("svg-container").append(scriptEl);
+            },
+            error: function(e){
+                console.error("search failed");
+                console.error(e);
+            }
+        }
+    );
+  } 
+
+function filter(){
+    console.log(document.getElementById('filter_box'))
+    term = document.getElementById('filter_box').value;
+    
+    $.ajax(
+        {
+            method: "GET",
+            url: "http://localhost:8000/orbyx/filter/" + term,
+            success: function(data){
+                console.log("success");
+                console.log(data);
+                generate_json(data);
+                refresh();
+                addTerm(term)
+            },
+            error: function(e){
+                console.error("search failed");
+                console.error(e);
+            }
+        }
+    );
+  } 
+var filterButton = document.getElementById('filter_button');
+filterButton.onclick = filter
+
+
+function reset(){
+    $.ajax(
+        {
+            method: "GET",
+            url: "http://localhost:8000/orbyx/reset" ,
+            success: function(data){
+                console.log("success");
+                console.log(data);
+                generate_json(data);
+                refresh();
+                document.getElementById('filters_span').innerHTML = ''
+                terms = []
+            },
+            error: function(e){
+                console.error("search failed");
+                console.error(e);
+            }
+        }
+    );
+  } 
+var resetButton = document.getElementById('reset_button');
+resetButton.onclick = reset
+
+function undo(){
+    $.ajax(
+        {
+            method: "GET",
+            url: "http://localhost:8000/orbyx/undo" ,
+            success: function(data){
+                console.log("success");
+                console.log(data);
+                refresh();
+                generate_json(data);
+                popTerm();
+            },
+            error: function(e){
+                console.error("search failed");
+                console.error(e);
+            }
+        }
+    );
+  } 
+var undoButton = document.getElementById('undo_button');
+undoButton.onclick = undo
 
 function generate_json(data){
+    data_tree_init = {}
+    data_tree_nodes = {}
     nodes = data.nodes;
     edges = data.edges;
 
@@ -32,7 +170,6 @@ function generate_json(data){
         if(node.children > 0){
             hasChildren = true;
         }
-
         if(data_tree_init[node["id"]] == undefined) {
 
             data_tree_init[node["id"].toString()] = {
@@ -68,13 +205,12 @@ function generate_json(data){
 }
 
 function generate_tree() {
-
+    $("#tree-canvas").jstree("destroy");
     var data = [];
 
     for (const [key, value] of Object.entries(data_tree_init)) {
         data.push(value);
     }
-
 
     $('#tree-canvas').jstree({
         'core' : {
@@ -89,7 +225,8 @@ function generate_tree() {
         "plugins": [
           "contextmenu", "types", "wholerow"
         ]
-    }).on('create_node.jstree', function(e, data) {
+    })
+    .on('create_node.jstree', function(e, data) {
         console.log('saved');
     });
 
