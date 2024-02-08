@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{% static 'orbyx/style.css' %}">
   </head>
   <body>
+
+
     <div class="container">
       <div class="tiny-container">
 
@@ -45,20 +47,20 @@
             <form class="filter-form" style="display: flex; padding: 1em; align-items: center; gap: 10px;">
 
               <label for="dropdown1">Data Source:</label>
-              <select id="dropdown1">
+              <select id="data-source-drop-down">
                 {% for source in data_sources %}
                 <option value="{{ source.name }}">{{ source.name }}</option>
                 {% endfor %}
               </select>
 
               <label for="dropdown2">Visualizer:</label>
-              <select id="dropdown2">
+              <select id="visualizers-drop-down">
                 {% for visualizer in visualizers %}
                 <option value="{{ visualizer.name }}">{{ visualizer.name }}</option>
                 {% endfor %}
               </select>
 
-              <a class="configure-plugins" href="#">Configure</a>
+                <button class="styled-button" type="button" onclick="openConfigureDialog();">Configure</button>
             </form>
 
 
@@ -93,8 +95,26 @@
         </div>
 
       </div>
+
+    <div id="configure-dialog" class="popup-dialog" style="display:none;">
+      <div class="popup-content">
+        <h1>Orbyx Plugin Configuration</h1>
+        <form id="dynamic-form" class="dynamic-form">
+          <div id="form-container" class="form-container">
+          </div>
+          <br>
+          <div class="dialog-actions">
+            <button type="button" class="styled-button" onclick="closeConfigureDialog()">Cancel</button>
+            <button type="button" class="styled-button" onclick="requestGraph()">Visualize</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
     </div>
     <script>
+
       function changeCanvasStyle() {
         var canvasElements = document.querySelectorAll('canvas');
         canvasElements.forEach(function(canvas) {
@@ -109,5 +129,87 @@
         document.body.classList.toggle("dark-theme");
       }
     </script>
+
+    <script>
+      function openConfigureDialog() {
+        let data_source = document.getElementById("data-source-drop-down");
+        let data_source_text = data_source.options[data_source.selectedIndex].value; 
+
+        let visualizer = document.getElementById("visualizers-drop-down");
+        let visualizer_text = visualizer.options[visualizer.selectedIndex].value; 
+
+        fetchFormFields(data_source_text, visualizer_text);
+
+        document.getElementById('configure-dialog').style.display = 'flex';
+      }
+
+      function fetchFormFields(data_source_text, visualizer_text) {
+        fetch(`get-form-fields/?data_source=${data_source_text}&visualizer=${visualizer_text}`)
+          .then(response => response.json())
+          .then(data => {
+            const fields = data.fields;
+            const formContainer = document.getElementById('form-container');
+            formContainer.innerHTML = ''; 
+            fields.forEach(field => {
+              const label = document.createElement('label');
+              label.innerText = field.label;
+              const input = document.createElement('input');
+              input.type = field.type || 'text'; 
+              input.setAttribute('name', field.name);
+              formContainer.appendChild(label);
+              formContainer.appendChild(input);
+            });
+          }).catch(error => {
+            console.error('Error fetching form fields:', error);
+          });
+      }
+
+      function closeConfigureDialog() {
+        document.getElementById('configure-dialog').style.display = 'none';
+      }
+
+      function requestGraph() {
+        const formContainer = document.getElementById('form-container');
+        const formData = {};
+        formContainer.querySelectorAll('input').forEach(input => {
+          formData[input.getAttribute('name')] = input.value;
+        });
+
+        fetch('submit-form', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        })
+        .then(response => {
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+        closeConfigureDialog();
+      }
+    </script>
+
+    <script>
+      function submitForm() {
+        const formData = new FormData(document.getElementById('dynamic-form'));
+        fetch('/submit-form/', {
+          method: 'POST',
+          body: formData,
+          headers: {"X-CSRFToken": csrftoken},
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Graph data:', data.graph_data);
+            renderGraph(data.graph_data); 
+          });
+      }
+
+      function renderGraph(graphData) {
+        console.log('Rendering graph with data:', graphData);
+      }
+    </script>
+
+
+
   </body>
 </html>
