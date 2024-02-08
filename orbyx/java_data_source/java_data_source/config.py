@@ -1,0 +1,2 @@
+encoding = "UTF-8"  #Encoding type used to read files, should usually be UTF8
+path = "D:\\Marko\\Desktop\\iss3\\ISS-Projekat-Tim27\\Nomad Server\\src"   #Externalized path to project being parsed, eventually will be set through UI

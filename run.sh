@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 install_package() {
   local package_dir=$1
   if [[ -d "$package_dir" && -f "$package_dir/setup.py" ]]; then
@@ -32,10 +33,11 @@ echo "Cleaning the environment..."
 cd orbyx
 
 install_package "api"
+install_package "java_data_source"
+
 install_package "block_visualizer"
 install_package "simple_visualizer"
 install_package "tinywiki"
 install_package "core"
 install_package "graph_explorer"
-
 start_server "graph_explorer"

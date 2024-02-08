@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
 from model.graph.graph import Graph
-
 class DataSourceAPI(ABC):
     # @abstractmethod
     def get_name(self) -> str:
