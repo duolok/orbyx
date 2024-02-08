@@ -14,6 +14,7 @@
   --dark-canvas: #1e1e1e;
   --dark-hover: #3f3f3f;
   --light-help: #f0edee;
+  --popup-bg-color: #ffffff; 
 }
 
 .dark-theme {
@@ -24,21 +25,22 @@
   --dark-canvas: #1e1e1e;
   --dark-hover: #3f3f3f;
   --light-help: #f0edee;
+  --popup-bg-color: #333333; 
 }
 
 
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  height: 100vh;
   font-family: 'Bayon', sans-serif;
 }
 
 .container {
   display: flex;
   flex-direction: vertical;
-  height: 100vh;
   width: 100vw;
+  height: 100vh;
 }
 
 .tiny-container{
@@ -250,19 +252,7 @@ label:last-child {
 .complex-view {
   width: 100%;
   height: 85%;
-}
-
-.configure-plugins {
-  padding: 6px 30px;
-  width: 40px;
-  text-decoration: none;
-  color: white;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background-color: var(--menu-background);
-  border: 2px solid var(--light-help);
-  border-radius: 7px;
+  background-color: var(--light-canvas);
 }
 
 .styled-select, .styled-button {
@@ -279,7 +269,6 @@ label:last-child {
   background-color: var(--dark-hover);
 }
 
-/* Define a base style for buttons */
 .button {
   padding: 8px 12px;
   border-radius: 5px;
@@ -335,3 +324,24 @@ label:last-child {
   color: white;
 }
 
+.popup-dialog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  backdrop-filter: blur(20px); 
+  color: var(--light-help);
+  z-index: 1000;
+  padding: 1em;
+}
+
+.dialog-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+}
