@@ -75,3 +75,8 @@ class Engine(CoreAPI):
         logging.info("OVDE SAM")
         workspaces = {"Workspace 1": {}, "Workspace 2": {}}
         return workspaces.keys()
+
+    def add_workspace(self, data_source, visualizer):
+        """Method to add new worspace"""
+        workspaces["Workspace 3"] = {}
+        return workspaces.keys()

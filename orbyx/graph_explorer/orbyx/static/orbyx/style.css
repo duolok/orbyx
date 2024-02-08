@@ -463,7 +463,6 @@ label:last-child {
   height: 5%;
   display: flex;
   flex-direction: row;
-  gap: 15px;
   align-items: center;
   background-color: var(--light-canvas);
   border-top: 3px solid var(--dark-primary);
@@ -472,11 +471,17 @@ label:last-child {
 .tab {
   cursor: pointer;
   padding: 5px;
+  padding-right: 15px;
   padding-top: 0px;
   padding-bottom: 0px;
   height: 100%;
   display: flex;
   align-items: center;
+}
+
+.tab-selected {
+  background-color: var(--dark-hover);
+  color: white;
 }
 
 .tab:hover{

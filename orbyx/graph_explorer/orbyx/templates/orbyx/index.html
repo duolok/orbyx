@@ -96,7 +96,7 @@
 
         <div id="tabs-view">
             {% for workspace in workspaces %}
-              <div class="tab">
+              <div class="tab" id="{{workspace}}" onclick="open_workspace(event, '{{ workspace }}')">
                 <p>{{ workspace }}</p>
               </div>
             {% endfor %}
@@ -113,7 +113,8 @@
               {% csrf_token %}
               <div class="modal-form" style="display: flex; flex-direction: row; gap: 15px;">
                   <label style="width: 150px; font-size: large; " for="dropdown-data-sources">Data Source:</label>
-                  <select style="width: 250px; color: white; font-weight: bold; font-size: medium; cursor: pointer; background-color: var(--menu-background);" id="dropdown-data-sources" name="data_source">
+                  <select id="dropdown-data-sources" name="data_source_modal"
+                          style="width: 250px; color: white; font-weight: bold; font-size: medium; cursor: pointer; background-color: var(--menu-background);">
                     {% for source in data_sources %}
                       <option value="{{ source.name }}">{{ source.name }}</option>
                     {% endfor %}
@@ -122,7 +123,8 @@
 
               <div style="display: flex; flex-direction: row; gap: 15px;" >
                 <label style="width: 150px; font-size: large; " for="dropdown-visualizers">Visualizer:</label>
-                <select style="width: 250px; color: white; font-weight: bold; font-size: medium; cursor:pointer; background-color: var(--menu-background);" id="dropdown-visualizers" name="visualizer">
+                <select id="dropdown-visualizers" name="visualizer_modal"
+                        style="width: 250px; color: white; font-weight: bold; font-size: medium; cursor:pointer; background-color: var(--menu-background);">
                   {% for visualizer in visualizers %}
                     <option value="{{ visualizer.name }}">{{ visualizer.name }}</option>
                   {% endfor %}
@@ -155,5 +157,6 @@
   </body>
 <footer>
   <script src="{% static "orbyx/handle_modal.js" %}"></script>
+  <script src="{% static "orbyx/changing_workspaces.js" %}"></script>
 </footer>
 </html>

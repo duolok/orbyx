@@ -45,6 +45,22 @@ def load_graph_from_plugin(request):
 
 
 def add_workspace(request):
-    data_source = request.POST.get('data_source')
-    visualizer = request.POST.get('visualizer')
-    return HttpResponse("Chosen data source: {} and visualizer: {}".format(data_source, visualizer))
+    engine = get_engine();
+    data_source = request.POST.get('data_source_modal')
+    visualizer = request.POST.get('visualizer_modal')
+
+    workspaces = engine.add_workspace(engine, data_source, visualizer)
+
+    data_sources = engine.get_data_sources()
+    visualizers = engine.get_visualizers()
+
+    visualization = engine.send_data(None, "Example Visualization Data")
+
+    context = {
+        'main_view': mark_safe(visualization),
+        'data_sources': data_sources,
+        'visualizers': visualizers,
+        'workspaces': workspaces
+    }
+
+    return render(request, 'orbyx/index.html', context)
