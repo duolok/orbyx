@@ -58,11 +58,9 @@ def load_graph(request):
     visualization = engine.send_data(json.loads(request.body))
 
     context = {
-        'main_view': visualization, 
+        'main_view': mark_safe(visualization), 
         'data_sources': data_sources,
         'visualizers': visualizers,
     }
-
-    print(context)
 
     return render(request, 'orbyx/index.html', context) 
