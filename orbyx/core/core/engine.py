@@ -25,6 +25,11 @@ class Engine(CoreAPI):
         self.data_tree = graph
         visualizer = get_visualizer_plugin_by_name("Simple Visualizer")
         return visualizer.visualize(graph)
+    def refresh_view(self):
+        graph = Engine.search_provider.sub_graph
+        self.data_tree = graph
+        visualizer = get_visualizer_plugin_by_name("Simple Visualizer")
+        return visualizer.visualize(graph)
 
     def send_data_tree(self):
         wikipedia_data_source = get_data_source_plugin_by_name("Tinywiki")
@@ -65,11 +70,21 @@ class Engine(CoreAPI):
 
     def _filter(self, filter_criteria: str):
         """Method to apply filters to the graph"""
-        return self.search_provider.search(filter_criteria)
+        return self.search_provider.filter(filter_criteria)
     
     def _search(self, term: str):
         """Method to apply search to the graph"""
+        
         return self.search_provider.search(term)
+    
+    def reset_search(self):
+        """Method to reset search parameters"""
+        return self.search_provider.reset()
+    
+    def undo_search(self):
+        """Method to reset search parameters"""
+        return self.search_provider.undo()
+
 
     def _cache_graph(self):
         """Method to save the current version of the graph"""

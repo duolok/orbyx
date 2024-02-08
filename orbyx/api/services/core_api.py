@@ -63,4 +63,12 @@ class CoreAPI(ABC):
     def send_data(self, graph: str, vizualier:str):
         """Abstract method that will save current version of the graph"""
         pass
+    @abstractmethod
+    def reset_search(self):
+        """Abstract method that will reset search parameters"""
+        pass
+    @abstractmethod
+    def refresh_view(self):
+        """Abstract method that will refresh main view"""
+        pass
     
