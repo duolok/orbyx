@@ -25,7 +25,16 @@ class DependencyListener(ParseTreeListener):
 
         if(self.current_package):
             self.insert_edge(self.current_package, class_name)
+    def enterEnumDeclaration(self, ctx):
+        
+        class_name = ctx.identifier().getText()
+        self.current_class = class_name
+        self.insert_node(class_name, self.data)
 
+        if(self.current_package):
+            self.insert_edge(self.current_package, class_name)
+    def exitEnumDeclaration(self, ctx):
+        self.current_class = None
     def enterFieldDeclaration(self, ctx):
         if ctx.typeType().primitiveType() == None:
             self.nodes[self.current_class]["data"]["fields"].append([ctx.typeType().classOrInterfaceType().getText(), ctx.variableDeclarators().variableDeclarator(0).variableDeclaratorId().identifier().getText()])

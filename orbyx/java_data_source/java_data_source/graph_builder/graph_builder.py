@@ -9,7 +9,10 @@ class Simple_Builder(Graph_Builder):
     #Graph Builder implementation that ignores multiple references
     def build(self, nodes, edges):
         g = graph.Graph()
+        id = 0
         for k in nodes.keys():
+            nodes[k]["data"]["id"] = id
+            id += 1
             nodes[k]["node"] = g.insert_node(nodes[k]["data"])
         for edge in edges:
             try:
@@ -29,7 +32,11 @@ class Weighed_Builder(Graph_Builder):
     #Graph Builder implementation that builds a weighed graph, where the weight of an edge is the number of references
     def build(self, nodes, edges):
         g = graph.Graph()
+        id = 0
+
         for k in nodes.keys():
+            nodes[k]["data"]["id"] = id
+            id += 1
             nodes[k]["node"] = g.insert_node(nodes[k]["data"])
         for edge in edges:
             try:

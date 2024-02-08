@@ -6,8 +6,7 @@ from services.core_api import Graph
 
 from services.utils import *
 
-import pkg_resources
-
+import logging
 class Engine(CoreAPI):
     def __init__(self):
         self.data_source_plugin = None
@@ -19,16 +18,18 @@ class Engine(CoreAPI):
         self.visualizer_plugin = visualizer_plugin
 
     def send_data(self, graph):
-        wikipedia_data_source = get_data_source_plugin_by_name("Tinywiki")
-        parsed_data = wikipedia_data_source.parse_data("some link will be here")  
+        wikipedia_data_source = get_data_source_plugin_by_name("Java Parser")
+        parsed_data = wikipedia_data_source.parse_data({'project_url' : "D:\\Marko\\Desktop\\iss3\\ISS-Projekat-Tim27\\Nomad Server\\src"})  
+        
+        
         graph = wikipedia_data_source.get_graph(parsed_data)
         self.data_tree = graph
         visualizer = get_visualizer_plugin_by_name("Simple Visualizer")
         return visualizer.visualize(graph)
 
     def send_data_tree(self):
-        wikipedia_data_source = get_data_source_plugin_by_name("Tinywiki")
-        parsed_data = wikipedia_data_source.parse_data("some link will be here")
+        wikipedia_data_source = get_data_source_plugin_by_name("Java Parser")
+        parsed_data = wikipedia_data_source.parse_data({'project_url' : "D:\\Marko\\Desktop\\iss3\\ISS-Projekat-Tim27\\Nomad Server\\src"})
         graph = wikipedia_data_source.get_graph(parsed_data)
         logging.info("GRAF: ")
         logging.info(graph)

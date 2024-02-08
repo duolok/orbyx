@@ -18,13 +18,20 @@ class JavaDataSource(DataSourceAPI):
             self.listener = DependencyListener()
             self.builder: graph_builder.Graph_Builder = graph_builder.Simple_Builder()
         def parse_data(self, data: Any) -> List[Dict[str, Any]]:
-            self.parse_java_file(data, self.listener)
+            config.path = data['project_url']
+            self.process_files_in_directory(config.path)
             return [self.listener.nodes, self.listener.edges]
         @property
         def name(self) -> str:
             return "Java Parser"
+        def get_name(self) -> str:
+            return "Java Parser"
+        def get_requirements(self) -> List:         
+            fields = [             
+                {'name': 'project_url', 'label': 'Project URL'}]         
+            return fields
         def get_data(self) -> graph.Graph:
-            return super().get_data()
+            return {"bla" : "bla"}
         def get_graph(self, parsed_data: List[Dict[str, Any]]) -> graph.Graph:
             return self.builder.build(self.listener.nodes, self.listener.edges)
         def parse_java_file(self, file_path):
