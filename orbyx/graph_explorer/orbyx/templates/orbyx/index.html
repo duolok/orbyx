@@ -104,7 +104,7 @@
           </div>
           <br>
           <div class="dialog-actions">
-            <button type="button" class="styled-button" onclick="closeConfigureDialog()">Cancel</button>
+            <button href="" class="styled-button exit-btn" onclick="closeConfigureDialog()">Close</button>
             <button type="button" class="styled-button" onclick="requestGraph()">Visualize</button>
           </div>
         </form>
@@ -168,6 +168,9 @@
         document.getElementById('configure-dialog').style.display = 'none';
       }
 
+    </script>
+
+      <script>
       function requestGraph() {
         const formContainer = document.getElementById('form-container');
         const formData = {};
@@ -175,41 +178,17 @@
           formData[input.getAttribute('name')] = input.value;
         });
 
-        fetch('submit-form', {
+        fetch('load-graph', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
-        })
-        .then(response => {
         })
         .catch(error => {
           console.error('Error:', error);
         });
         closeConfigureDialog();
       }
+
     </script>
-
-    <script>
-      function submitForm() {
-        const formData = new FormData(document.getElementById('dynamic-form'));
-        fetch('/submit-form/', {
-          method: 'POST',
-          body: formData,
-          headers: {"X-CSRFToken": csrftoken},
-        })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Graph data:', data.graph_data);
-            renderGraph(data.graph_data); 
-          });
-      }
-
-      function renderGraph(graphData) {
-        console.log('Rendering graph with data:', graphData);
-      }
-    </script>
-
-
-
   </body>
 </html>
