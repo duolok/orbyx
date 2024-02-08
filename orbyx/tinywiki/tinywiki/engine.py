@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -7,16 +8,24 @@ from tinywiki.scraper import get_scraped_dictionary
 from typing import Any, List, Dict
 
 class WikipediaDataSource(DataSourceAPI):
+    def __init__(self):
+        self.name = "Tinywiki"
+
+    def get_name(self) -> str:
+        return self.name
+    
     def parse_data(self, data: Any) -> List[Dict[str, Any]]:
         #start_url = data[0]
         start_url = "https://en.wikipedia.org/wiki/Rust_(programming_language)"
         scraped_dictionary = get_scraped_dictionary(start_url)
+        logging.info("Scraped dictionary: ")
+        logging.info(scraped_dictionary)
         return [{key: val} for key, val in scraped_dictionary.items()]
 
     def get_graph(self, parsed_data: List[Dict[str, Any]]) -> Graph:
         graph = Graph()
         vertex_map = {}
-
+        i = 1
         for page_data in parsed_data:
             url = list(page_data.keys())[0]
             page_info = list(page_data.values())[0]
@@ -25,14 +34,15 @@ class WikipediaDataSource(DataSourceAPI):
             children = page_info["children"]
 
             node_value = {
+                "id":i,
                 "url": url,
                 "name": name,
                 "paragraphs": paragraphs,
                 "children": len(children)
             }
-
-            node = GraphNode(node_value)
-            vertex = graph.insert_node(node)
+            i+=1
+            # node = GraphNode(node_value)
+            vertex = graph.insert_node(node_value)
             vertex_map[url] = vertex
 
         for page_data in parsed_data:

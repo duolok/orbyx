@@ -35,6 +35,7 @@ install_package "api"
 install_package "java_data_source"
 
 install_package "block_visualizer"
+install_package "simple_visualizer"
 install_package "tinywiki"
 install_package "core"
 install_package "graph_explorer"
