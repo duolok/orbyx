@@ -2,7 +2,7 @@ from model.graph.graph import Graph
 from model.graph.graph import GraphEdge
 from model.graph.graph import GraphNode
 from typing import Any, List, Dict
-from utils import ops
+from search.utils import ops
 class SearchProvider():
     def __init__(self, initial_graph: Graph):
         self.sub_graph = initial_graph
@@ -13,8 +13,10 @@ class SearchProvider():
 
     def search(self, search_term):
         self._search_edges(search_term)
+        return self.sub_graph
     def filter(self, filter):
         self._filter_edges(filter)
+        return self.sub_graph
     
     def _check_term(self, search_term : str, node : GraphNode):
         for k in node.node_value():

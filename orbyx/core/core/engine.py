@@ -2,15 +2,18 @@ import logging
 from typing import Any, Dict, List
 from services.core_api import CoreAPI
 from services.utils import *
+from model.graph.graph import Graph
+from search.search import SearchProvider
 import pkg_resources
 
 class Engine(CoreAPI):
+    search_provider = None
     def __init__(self):
         self.data_source_plugin = None
         self.visualizer_plugin = None
         self.data_tree = None
 
-    def _set_plugins(data_source_plugin, visualizer_plugin):
+    def _set_plugins(self, data_source_plugin, visualizer_plugin):
         self.data_source_plugin = data_source_plugin
         self.visualizer_plugin = visualizer_plugin
 
@@ -18,6 +21,7 @@ class Engine(CoreAPI):
         wikipedia_data_source = get_data_source_plugin_by_name("Tinywiki")
         parsed_data = wikipedia_data_source.parse_data("some link will be here")  
         graph = wikipedia_data_source.get_graph(parsed_data)
+        Engine.search_provider = SearchProvider(graph)
         self.data_tree = graph
         visualizer = get_visualizer_plugin_by_name("Simple Visualizer")
         return visualizer.visualize(graph)
@@ -26,6 +30,8 @@ class Engine(CoreAPI):
         wikipedia_data_source = get_data_source_plugin_by_name("Tinywiki")
         parsed_data = wikipedia_data_source.parse_data("some link will be here")
         graph = wikipedia_data_source.get_graph(parsed_data)
+        Engine.search_provider = SearchProvider(graph)
+
         logging.info("GRAF: ")
         logging.info(graph)
         return graph
@@ -57,10 +63,13 @@ class Engine(CoreAPI):
         # Implement initializing graph logic
         self.graph = Graph()
 
-    def _filter(self, filter_criteria: Dict[str, Any]):
+    def _filter(self, filter_criteria: str):
         """Method to apply filters to the graph"""
-        # Implement applying filters to the graph logic
-        pass
+        return self.search_provider.search(filter_criteria)
+    
+    def _search(self, term: str):
+        """Method to apply search to the graph"""
+        return self.search_provider.search(term)
 
     def _cache_graph(self):
         """Method to save the current version of the graph"""

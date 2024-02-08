@@ -76,8 +76,8 @@
           <div class="filters">
             <section>
               <form class="filter-form">
-                <span> Contains: <input type="text"> </span>
-                <a class="search-button" href="#">Search</a>
+                <span> Contains: <input type="text" id="search_box"> </span>
+                <a class="search-button" href="#" id="search_button">Search</a>
                 <span> Filter: </span>
                 <input type="text">
                 <input type="text">
@@ -100,6 +100,7 @@
 
       </div>
     </div>
+    
     <script>
       function changeCanvasStyle() {
         var canvasElements = document.querySelectorAll('canvas');
@@ -108,13 +109,14 @@
         });
       }
     </script>
-
+    
     <script>
       var icon = document.getElementById("dark-mode-switch");
       icon.onclick = function() {
         document.body.classList.toggle("dark-theme");
       }
     </script>
+    
   </body>
 
 <footer>

@@ -20,6 +20,27 @@ var tree = () => {
 }
 
 tree();
+function search(){
+    console.log(document.getElementById('search_box'))
+    term = document.getElementById('search_box').value;
+    $.ajax(
+        {
+            method: "GET",
+            url: "http://localhost:8000/orbyx/search/" + term,
+            success: function(data){
+                console.log("success");
+                console.log(data);
+                generate_json(data);
+            },
+            error: function(e){
+                console.error("search failed");
+                console.error(e);
+            }
+        }
+    );
+  } 
+var searchButton = document.getElementById('search_button');
+searchButton.onclick = search
 
 function generate_json(data){
     nodes = data.nodes;
@@ -74,7 +95,6 @@ function generate_tree() {
     for (const [key, value] of Object.entries(data_tree_init)) {
         data.push(value);
     }
-
 
     $('#tree-canvas').jstree({
         'core' : {
