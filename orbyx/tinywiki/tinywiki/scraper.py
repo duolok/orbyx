@@ -10,10 +10,10 @@ visited_urls = set()
 pages_scraped = 0
 urls_to_scrape = Queue()
 
-def scrape_wikipedia(start_url, result):
+def scrape_wikipedia(start_url, result, max_pages):
     urls_to_scrape.put(start_url)
 
-    while not urls_to_scrape.empty() and pages_scraped < MAX_PAGES:
+    while pages_scraped < int(max_pages):
         current_url = urls_to_scrape.get()
         if current_url in visited_urls:
             continue
@@ -29,7 +29,9 @@ def scrape_page(url, result):
     global pages_scraped
     content = fetch_page_content(url)
     if content is None:
+        logging.info(f"Skipping {url}, content could not be fetched.")
         return 
+
     soup = BeautifulSoup(content, 'html.parser')
 
     result[url]["name"] = soup.find(id="firstHeading").get_text()
@@ -58,9 +60,15 @@ def remove_dangling_children(result_dictionary):
         info["children"] = [child for child in info["children"] if child in result_dictionary]
     return result_dictionary
 
-def get_scraped_dictionary(start_url):
+def get_scraped_dictionary(start_url, max_nodes):
     global urls_to_scrape
-    urls_to_scrape = Queue()
     scraper_result = {}
+    refresh_parameters()
     setup_logging()
-    return scrape_wikipedia(start_url, scraper_result)
+    return scrape_wikipedia(start_url, scraper_result, max_nodes)
+
+def refresh_parameters():
+    global  urls_to_scrape, visited_urls, pages_scraped
+    visited_urls = set()
+    pages_scraped = 0
+    urls_to_scrape = Queue()
