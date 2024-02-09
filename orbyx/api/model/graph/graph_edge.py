@@ -1,4 +1,4 @@
-from graph_node import GraphNode
+from model.graph.graph_node import GraphNode
 from typing import Optional
 
 class GraphEdge:
@@ -7,23 +7,18 @@ class GraphEdge:
         self._destination = desination
         self._value = value
 
-    def opposite(self, v: N) -> Optional[N]:
-        """Return the opposite endpoint of the given node."""
-        if v == self._destination:
-            return self._origin
-        elif v == self._origin:
-            return self._destination
-        else:
-            raise ValueError("Provided node is not an endpoint of this edge")
-
     def endpoints(self):
         return (self._origin, self._destination)
 
     def value(self):
         return self._value
 
+    def to_dict(self):
+        return {"source":self._origin.node_value(), "target":self._destination.node_value(), "value": self._value}
+
     def __hash__(self):
         return hash((self._origin, self._destination))
 
-   def __str__(self):
+    def __str__(self):
         return f"{self._origin}, {self._destination}, {self._value}"
+
