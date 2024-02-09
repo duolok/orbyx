@@ -28,8 +28,8 @@
             <span class="header-text"> orbyx </span>
           </div>
           <div class="header-buttons">
-            <a id="simple-view-btn" class="header-button" href="#">Simple View</a>
-            <a id="block-view-btn" class="header-button" href="#">Block View</a>
+            <a id="simple-view-btn" class="header-button" id="simple-changer"  onclick="visualizerChange('Simple Visualizer')" href="#">Simple View</a>
+            <a id="block-view-btn" class="header-button" id="block-changer" onclick="visualizerChange('Block Visualizer')" href="#">Block View</a>
           </div>
         </div>
 
@@ -216,6 +216,40 @@
           document.getElementsByClassName('complex-view')[0].innerHTML= '';
           document.getElementsByClassName('tree-view')[0].innerHTML= '';
           document.getElementsByClassName('bird-view')[0].innerHTML= '';
+        }
+
+        function simplePluginChange() {
+          fetch('simple-plugin-change', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json', 
+            },
+          })
+            .then(response => response.text()) 
+            .then(htmlContent => {
+              document.querySelector('body').innerHTML = '';
+              const scriptEl = document.createRange().createContextualFragment(htmlContent);
+              document.querySelector('body').append(scriptEl);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+
+        function visualizerChange(plugin_name) {
+          const encodedPluginName = encodeURIComponent(plugin_name);
+          const url = `visualizer-change/?visualizer=${encodedPluginName}`;
+
+          fetch(url)
+            .then(response => response.text())
+            .then(htmlContent => {
+              document.querySelector('body').innerHTML = '';
+              const scriptEl = document.createRange().createContextualFragment(htmlContent);
+              document.querySelector('body').append(scriptEl);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
         }
 
     </script>
