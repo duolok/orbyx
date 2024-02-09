@@ -13,6 +13,13 @@ class WikipediaDataSource(DataSourceAPI):
 
     def get_name(self) -> str:
         return self.name
+
+    def get_requirements(self) -> List:
+        fields = [
+            {'name': 'start_url', 'label': 'Start URL'},
+            {'name': 'max_nodes', 'label': 'MAX NODES'},
+        ]
+        return fields
     
     def parse_data(self, data: Any) -> List[Dict[str, Any]]:
         #start_url = data[0]

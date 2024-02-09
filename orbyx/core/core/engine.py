@@ -17,20 +17,26 @@ class Engine(CoreAPI):
         self.visualizer_plugin = None
         self.data_tree = None
 
-    def _set_plugins(self, data_source_plugin, visualizer_plugin):
-        self.data_source_plugin = data_source_plugin
-        self.visualizer_plugin = visualizer_plugin
+    def _set_plugins(self, data_source_plugin: str, visualizer_plugin: str):
+        data_source = get_data_source_plugin_by_name(data_source_plugin)
+        visualizer = get_visualizer_plugin_by_name(visualizer_plugin)
 
-    def send_data(self, graph):
-        wikipedia_data_source = get_data_source_plugin_by_name("Java Parser")
-        parsed_data = wikipedia_data_source.parse_data({'project_url' : "D:\\Marko\\Desktop\\iss3\\ISS-Projekat-Tim27\\Nomad Server\\src"})  
-        
-        
-        graph = wikipedia_data_source.get_graph(parsed_data)
+        if data_source is None or visualizer is None:
+            raise ValueError("Invalid data source or visualizer plugin name.")
+
+        self.data_source_plugin = data_source
+        self.visualizer_plugin = visualizer
+
+    def send_data(self, data: Any):
+        parsed_data = self.data_source_plugin.parse_data(data)  
+        graph = self.data_source_plugin.get_graph(parsed_data)
         Engine.search_provider = SearchProvider(graph)
         self.data_tree = graph
-        visualizer = get_visualizer_plugin_by_name("Simple Visualizer")
-        return visualizer.visualize(graph)
+        return self.visualizer_plugin.visualize(graph)
+
+    def get_data_sources(self) -> List[DataSourceAPI]:
+        return get_data_source_plugins()
+
     def refresh_view(self):
         graph = Engine.search_provider.sub_graph
         self.data_tree = graph
@@ -47,12 +53,8 @@ class Engine(CoreAPI):
         logging.info(graph)
         return graph
 
-    def get_data_sources() -> List[DataSourceAPI]:
-        return get_data_source_plugins()
-
-    def get_visualizers() -> List[Visualizer]:
+    def get_visualizers(self) -> List[Visualizer]:
         return get_visualizer_plugins()
-
 
     def get_data(self, query_params: Dict[str, Any]):
         """Method to retrieve data from Django"""

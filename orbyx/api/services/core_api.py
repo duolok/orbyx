@@ -36,12 +36,12 @@ class CoreAPI(ABC):
         pass
 
     @abstractmethod
-    def get_data_sourcs() -> List[DataSourceAPI]:
+    def get_data_sources(self) -> List[DataSourceAPI]:
         """ Abstract method for getting data source plugins"""
         pass
 
     @abstractmethod
-    def get_visualizers() -> List[Visualizer]:
+    def get_visualizers(self) -> List[Visualizer]:
         """ Abstract method for getting data source plugins"""
         pass
     
