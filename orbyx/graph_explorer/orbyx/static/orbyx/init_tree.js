@@ -230,8 +230,6 @@ function generate_tree() {
         console.log('saved');
     });
 
-
-
     $('#tree-canvas').on('select_node.jstree', function (e, data) {
         var selectedNode = data.node;
         addChildrenToNode(selectedNode);

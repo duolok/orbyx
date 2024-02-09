@@ -12,9 +12,9 @@
   stroke-width: 1.5px;
 }
 
-<!--#svg-container{-->
-<!--display: flex;-->
-<!--}-->
+#main2 {
+    display: none;
+}
 
 </style>
 </br>
@@ -31,7 +31,18 @@ var svgContainer = d3.select("#svg-container")
   .attr("width", containerWidth)
   .attr("height", containerHeight)
   .attr("preserveAspectRatio", "xMidYMid meet")
-  .attr("viewBox", "0 0 " + containerWidth + " " + containerHeight);
+  .attr("viewBox", "0 0 " + containerWidth + " " + containerHeight)
+  .attr('id', "main"); // Outline width
+
+var svgContainer2 = d3.select("#svg-container")
+  .append("svg")
+  .attr("width", containerWidth)
+  .attr("height", containerHeight)
+  .attr("preserveAspectRatio", "xMidYMid meet")
+  .attr("viewBox", "0 0 " + containerWidth + " " + containerHeight)
+  .attr('id', "main2"); // Outline width
+
+  var zoomHelper = svgContainer2.append("g");
 
 var loadedNodes = {{ nodes }};
 var loadedEdges = {{ edges }};
@@ -44,20 +55,30 @@ loadedEdges.forEach(node => {
     parsedEdges.push(JSON.parse(node))
 });
 
-var svg = d3.select("svg"),
-        width = +svg.attr("width"),
-        height = +svg.attr("height");
-
-    var zoomContainer = svg.call(d3.zoom().on("zoom", function () {
-        zoomContainer.attr("transform", d3.event.transform)
-    }))
+    var zoomContainer = svgContainer.call(d3.zoom().scaleExtent([0.3, 2]).translateExtent([[0, 0], [containerWidth, containerHeight]]).on("zoom", zoomed))
     .append("g");
+    function zoomed(event) {
+        zoomContainer.attr("transform", d3.event.transform);
+    // Access the transform object to get the current zoom state
+    const transform = d3.event.transform;
 
+    // Trigger a custom event to notify about the zoom change
+    const zoomChangeEvent = new CustomEvent('zoomChange', {
+        detail: {
+            scale: transform.k, // Current zoom scale
+            translateX: transform.x, // Current translateX
+            translateY: transform.y // Current translateY
+        }
+    });
+
+    // Dispatch the custom event on the SVG element
+    svgContainer.node().dispatchEvent(zoomChangeEvent);
+    }
     var color = d3.scaleOrdinal(d3.schemeCategory20);
 
     var simulation = d3.forceSimulation()
                         .force("charge", d3.forceManyBody().strength(-100))
-                        .force("center", d3.forceCenter(width / 2, height / 2));
+                        .force("center", d3.forceCenter(containerWidth / 2, containerHeight / 2));
 
     var linkMap = d3.map();
 
@@ -81,7 +102,12 @@ var svg = d3.select("svg"),
                         .data(bilinks)
                         .enter().append("line")
                         .attr("class", "link");
-
+        var linkBird = zoomHelper.selectAll(".link")
+                             .attr("stroke", "#000")
+                              .attr("stroke-opacity", 0.6)
+                            .data(bilinks)
+                            .enter().append("line")
+                            .attr("class", "link");
 
         var node = zoomContainer.selectAll(".node")
                         .data(nodes.filter(function(d) { return d.id; }))
@@ -92,8 +118,15 @@ var svg = d3.select("svg"),
                               .on("start", dragstarted)
                               .on("drag", dragged)
                               .on("end", dragended));
+        var nodeBird = zoomHelper.selectAll(".node")
+                        .data(nodes.filter(function(d) { return d.id; }))
+                        .enter().append('g')
+                        .attr("class", "node")
+                        .attr('id', function(d){return "node"+d.id.toString()+"Bird";});
 
-        zoomContainer.selectAll('.node').each(function(d){slozenPrikaz(d);});
+        zoomContainer.selectAll('.node').each(function(d){slozenPrikaz(d, "node"+d.id.toString());});
+        zoomHelper.selectAll('.node').each(function(d){slozenPrikaz(d, "node"+d.id.toString()+"Bird");});
+
 
     zoomContainer.selectAll('.node').on("mouseover", function(d) {
         const keys = Object.keys(d);
@@ -111,7 +144,7 @@ var svg = d3.select("svg"),
         d3.select(".details").text("Current node: ");
     });
 
-    function slozenPrikaz(d){
+    function slozenPrikaz(d, group){
       const keys = Object.keys(d);
       
       var maxLen = d.name.length;
@@ -121,17 +154,17 @@ var svg = d3.select("svg"),
       var visina=keys.length*textSize;
       visina+=textSize;
 
-      d3.select("g#"+"node"+d.id.toString()).append('rect').
+      d3.select("g#"+group).append('rect').
       attr('x',0).attr('y',0).attr('width',duzina).attr('height',visina)
       .attr('fill','#3B4656');
       //Name
-      d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',duzina/2).attr('y',10)
+      d3.select("g#"+group).append('text').attr('x',duzina/2).attr('y',10)
       .attr('text-anchor','middle')
       .attr('font-size',textSize).attr('font-family','sans-serif')
       .attr('fill','white').text(d.name);
 
       //Line
-      d3.select("g#"+"node"+d.id.toString()).append('line').
+      d3.select("g#"+group).append('line').
       attr('x1',0).attr('y1',2*textSize).attr('x2',duzina).attr('y2',2*textSize)
       .attr('stroke','white').attr('stroke-width',2);
 
@@ -166,7 +199,6 @@ var svg = d3.select("svg"),
             }else{
                 partOfDescription = value;
             }
-            
             if(partOfDescription){
                 d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',5).attr('y',i*textSize)
                 .attr('text-anchor','start')
@@ -178,7 +210,6 @@ var svg = d3.select("svg"),
                 .attr('font-size',textSize).attr('font-family','sans-serif')
                 .attr('fill','white').text(key+": "+value);
             }
-            
             i+=1;
         }); 
     }
@@ -191,7 +222,7 @@ var svg = d3.select("svg"),
             .nodes(nodes)
             .on("tick", ticked);
 
-        simulation.force("link", d3.forceLink(links).id(d => d.id).distance(1000).strength(1));
+        simulation.force("link", d3.forceLink(links).id(d => d.id).distance(500).strength(1));
 
         function ticked() {
             link.attr('x1', function(d) { return d[0].x; })
@@ -199,6 +230,11 @@ var svg = d3.select("svg"),
             .attr('x2', function(d) { return d[1].x; })
             .attr('y2', function(d) { return d[1].y; });
             node.attr("transform", positionNode);
+            linkBird.attr('x1', function(d) { return d[0].x; })
+            .attr('y1', function(d) { return d[0].y; })
+            .attr('x2', function(d) { return d[1].x; })
+            .attr('y2', function(d) { return d[1].y; });
+            nodeBird.attr("transform", positionNode);
         }
 
     function positionNode(d) {
@@ -222,7 +258,5 @@ var svg = d3.select("svg"),
     function linkDistance(d){
         console.log(d);
     }
-
-
 
 </script>

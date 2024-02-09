@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bayon&family=Rubik&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js"></script>
     <title>Orbyx - Graph Explorer</title>
-    <link rel="stylesheet" href="{% static 'orbyx/style.css' %}">
+    <link rel="stylesheet" href="{% static 'orbyx/style.css' %}?{% now "U" %}">
       <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.16/themes/default/style.min.css"
           integrity="sha512-A5OJVuNqxRragmJeYTW19bnw9M2WyxoshScX/rGTgZYj5hRXuqwZ+1AVn2d6wYTZPzPXxDeAGlae0XwTQdXjQA=="
@@ -20,7 +20,6 @@
   </head>
   <body>
 
-
     <div class="container">
       <div class="tiny-container">
 
@@ -29,8 +28,8 @@
             <span class="header-text"> orbyx </span>
           </div>
           <div class="header-buttons">
-            <a id="simple-view-btn" class="header-button" href="#">Simple View</a>
-            <a id="block-view-btn" class="header-button" href="#">Block View</a>
+            <a id="simple-view-btn" class="header-button" id="simple-changer"  onclick="visualizerChange('Simple Visualizer')" href="#">Simple View</a>
+            <a id="block-view-btn" class="header-button" id="block-changer" onclick="visualizerChange('Block Visualizer')" href="#">Block View</a>
           </div>
         </div>
 
@@ -39,8 +38,8 @@
             <div id="tree-canvas"></div>
           </div>
 
-          <div class="bird-view">
-            <canvas id="bird-canvas" width="100%" height="100%"></canvas>
+          <div class="bird-view" id="birdView">
+            <svg id="bird"></svg>
           </div>
         </div>
 
@@ -80,7 +79,7 @@
             <section>
               <form class="filter-form">
                 <label> Contains: <input type="text" id="search_box"> </label>
-                <button class="styled-button" href="#" id="search_button">Serach</button>
+                <button class="styled-button" href="#" id="search_button">Search</button>
                 <label> Filter: </label>
                 <input type="text" id="filter_box">
                 <button class="styled-button" id="filter_button" href="#">Apply</button>
@@ -93,7 +92,7 @@
           <div class="applied-queries">
             <section>
               <form>
-                <span> Applied filters:  </span> <span id="filters_span"> </span>
+                <label> Applied filters:  </span> <span id="filters_span"> </label>
               </form>
             </section>
           </div>
@@ -219,6 +218,40 @@
           document.getElementsByClassName('bird-view')[0].innerHTML= '';
         }
 
+        function simplePluginChange() {
+          fetch('simple-plugin-change', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json', 
+            },
+          })
+            .then(response => response.text()) 
+            .then(htmlContent => {
+              document.querySelector('body').innerHTML = '';
+              const scriptEl = document.createRange().createContextualFragment(htmlContent);
+              document.querySelector('body').append(scriptEl);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+
+        function visualizerChange(plugin_name) {
+          const encodedPluginName = encodeURIComponent(plugin_name);
+          const url = `visualizer-change/?visualizer=${encodedPluginName}`;
+
+          fetch(url)
+            .then(response => response.text())
+            .then(htmlContent => {
+              document.querySelector('body').innerHTML = '';
+              const scriptEl = document.createRange().createContextualFragment(htmlContent);
+              document.querySelector('body').append(scriptEl);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+
     </script>
 
 <footer>
@@ -232,5 +265,7 @@
             referrerpolicy="no-referrer">
     </script>
     <script src="{% static "orbyx/init_tree.js" %}"></script>
+      <script src="{% static "orbyx/bird_view.js" %}"></script>
+
 </footer>
 </html>
