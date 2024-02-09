@@ -119,4 +119,15 @@ def filter(request: HttpRequest, term: str):
     edges = graph.serialize_edges()
     return JsonResponse({'nodes': nodes, 'edges':edges})
 
-
+def visualizer_change(request):
+    engine=get_engine()
+    visualizer = request.GET.get('visualizer')
+    data_sources = engine.get_data_sources()
+    visualizers = engine.get_visualizers()
+    visualization = engine.plugin_change(visualizer)
+    context = {
+        'main_view': mark_safe(visualization), 
+        'data_sources': data_sources,
+        'visualizers': visualizers,
+    }
+    return render(request, 'orbyx/index.html', context) 
