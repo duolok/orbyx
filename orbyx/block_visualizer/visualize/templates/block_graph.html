@@ -55,7 +55,7 @@ loadedEdges.forEach(node => {
     parsedEdges.push(JSON.parse(node))
 });
 
-    var zoomContainer = svgContainer.call(d3.zoom().scaleExtent([1, 3]).translateExtent([[0, 0], [containerWidth, containerHeight]]).on("zoom", zoomed))
+    var zoomContainer = svgContainer.call(d3.zoom().scaleExtent([0.3, 2]).translateExtent([[0, 0], [containerWidth, containerHeight]]).on("zoom", zoomed))
     .append("g");
     function zoomed(event) {
         zoomContainer.attr("transform", d3.event.transform);
