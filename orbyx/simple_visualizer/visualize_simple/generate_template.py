@@ -32,4 +32,3 @@ class SimpleVisualizer(Visualizer):
         edges = graph.serialize_edges()
         rendered_template = template.render({"nodes":json.dumps(nodes), "edges": json.dumps(edges)})
         return rendered_template
-        return None

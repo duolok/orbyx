@@ -39,6 +39,5 @@ class BlockVisualizer(Visualizer):
         edges = graph.serialize_edges()
         logging.info(nodes)
         logging.info(edges)
-        rendered_template = template.render({"nodes":json.dumps(nodes), "edges": json.dumps(edges)})
+        rendered_template = template.render({"nodes":json.dumps(nodes), "edges": json.dumps(edges), "is_directed":"true"})
         return rendered_template
-        return None

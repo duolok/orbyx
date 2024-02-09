@@ -24,7 +24,7 @@
 <script>
 var containerWidth = document.getElementById("svg-container").clientWidth;
 var containerHeight = document.getElementById("svg-container").clientHeight;
-
+var isDirected = {{is_directed}}
 // Set up SVG canvas
 var svgContainer = d3.select("#svg-container")
   .append("svg")
@@ -33,6 +33,18 @@ var svgContainer = d3.select("#svg-container")
   .attr("preserveAspectRatio", "xMidYMid meet")
   .attr("viewBox", "0 0 " + containerWidth + " " + containerHeight)
   .attr('id', "main"); // Outline width
+
+  svgContainer.append("defs")
+    .append("marker")
+    .attr("id", "arrow")
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 8)
+    .attr("refY", 5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M 0 0 L 10 5 L 0 10 z");
 
 var svgContainer2 = d3.select("#svg-container")
   .append("svg")
@@ -101,7 +113,19 @@ loadedEdges.forEach(node => {
                           .attr("stroke-opacity", 0.6)
                         .data(bilinks)
                         .enter().append("line")
-                        .attr("class", "link");
+                        .attr("class", "link")
+
+         if(isDirected){
+                    link.attr("marker-end", "url(#arrow)")
+                        .attr("d", function(d) {
+                            // Replace with your link path generator
+                            return "M" + d[0].x + "," + d[0].y
+                                 + "C" + (d[0].x + d[1].x) / 2 + "," + d[0].y
+                                 + " " + (d[0].x + d[1].x) / 2 + "," + d[1].y
+                                 + " " + d[1].x + "," + d[1].y;
+                        });
+         }
+
         var linkBird = zoomHelper.selectAll(".link")
                              .attr("stroke", "#000")
                               .attr("stroke-opacity", 0.6)
