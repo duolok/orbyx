@@ -165,7 +165,7 @@ function generate_json(data){
 
     nodes.forEach((node) => {
         node = JSON.parse(node);
-
+        console.log(node)
         var hasChildren = [];
         if(node.children > 0){
             hasChildren = true;
