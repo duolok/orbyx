@@ -76,7 +76,10 @@ function refresh(){
                 console.log(data);
                 document.getElementById("svg-container").innerHTML = ''
                 const scriptEl = document.createRange().createContextualFragment(data["visualization"]);
+                document.getElementById("birdView").innerHTML = '<svg id="bird"></svg>'
                 document.getElementById("svg-container").append(scriptEl);
+                const scriptEl2 = document.createRange().createContextualFragment('<script src="../static/orbyx/bird_view.js"></script>');
+                document.getElementById("birdView").append(scriptEl2);
             },
             error: function(e){
                 console.error("search failed");
