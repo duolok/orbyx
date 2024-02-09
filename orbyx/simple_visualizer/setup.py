@@ -11,6 +11,7 @@ setup(
     },
     install_requires=[
         'orbyx-api==0.1',
+        'jinja2'
     ],
     package_data={'visualize_simple': ['templates/*.html']},
     zip_safe=True
