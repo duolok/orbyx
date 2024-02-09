@@ -157,7 +157,7 @@ body {
   }
 
   .queries { 
-    height: 15%;
+    height: 20%;
     width: 100%;
     background-color:var(--menu-background);
     display: flex;
@@ -172,6 +172,10 @@ body {
     border-bottom: 1px solid var(--light-help);
     display: flex;
     flex-direction: row;
+  }
+
+  .applied-queries {
+    margin-bottom: 1em;
   }
 
   section {
@@ -203,6 +207,7 @@ body {
   label {
     display: block;
     margin-bottom: 4px;
+    font-family: 'Bayon', sans-serif;
   }
 
   label:last-child {
@@ -221,6 +226,7 @@ body {
     background-color: var(--menu-background);
     border: 2px solid var(--light-help);
     border-radius: 7px;
+    font-family: 'Bayon', sans-serif;
   }
 
   .search-button:hover{
@@ -254,8 +260,9 @@ body {
   }
 
   .filters {
-    height: 50px;
+    height: 30em;
     border-bottom: 2px solid var(--light-help);
+    margin-top: 0.3m ;
   }
 
   .complex-view {
@@ -287,7 +294,7 @@ body {
 .header {
   display: block;
   width: 100%;
-  height: 15%;
+  height: 20%;
 
 }
 
@@ -322,7 +329,7 @@ body {
   line-height: 1; 
   text-align: center;
   background-color: var(--menu-background);
-  border: 1px solid var(--light-border);
+  border: 2px solid var(--light-border);
 }
 
 #simple-view-btn,
@@ -360,7 +367,7 @@ body {
 }
 
 .queries { 
-  height: 15%;
+  height: 20%;
   width: 100%;
   background-color:var(--menu-background);
   display: flex;
@@ -372,7 +379,7 @@ body {
   width: 100%;
   height: 40%;
   color: var(--light-help);
-  border-bottom: 1px solid var(--light-help);
+  border-bottom: 2px solid var(--light-help);
   display: flex;
   flex-direction: row;
 }
@@ -486,12 +493,17 @@ label:last-child {
 }
 
 .styled-select, .styled-button {
-  padding: 8px 12px;
   border-radius: 5px;
   background-color: var(--menu-background);
   color: white;
   border: 1px solid var(--light-border);
   cursor: pointer;
+  font-family: 'Bayon', sans-serif;
+}
+
+.styled-button {
+  width: 5em;
+  padding-bottom: 0.5em;
 }
 
 
