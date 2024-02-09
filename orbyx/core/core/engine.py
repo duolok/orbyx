@@ -16,6 +16,7 @@ class Engine(CoreAPI):
     def __init__(self):
         self.data_source_plugin = None
         self.visualizer_plugin = None
+        self.graph = None
         self.data_tree = None
 
 
@@ -32,6 +33,7 @@ class Engine(CoreAPI):
     def send_data(self, data: Any):
         parsed_data = self.data_source_plugin.parse_data(data)  
         graph = self.data_source_plugin.get_graph(parsed_data)
+        self.graph = graph
         Engine.search_provider = SearchProvider(graph)
         self.data_tree = graph
         return self.visualizer_plugin.visualize(graph)
@@ -54,6 +56,10 @@ class Engine(CoreAPI):
         logging.info("GRAF: ")
         logging.info(graph)
         return graph
+
+    def plugin_change(self, visualizer: str):
+        self.visualizer_plugin = get_visualizer_plugin_by_name(visualizer) 
+        return self.refresh_view()
 
     def get_visualizers(self) -> List[Visualizer]:
         return get_visualizer_plugins()
