@@ -19,6 +19,8 @@
 
   </head>
   <body>
+
+
     <div class="container">
       <div class="tiny-container">
 
@@ -51,20 +53,21 @@
             <form class="filter-form" style="display: flex; padding: 1em; align-items: center; gap: 10px;">
 
               <label for="dropdown1">Data Source:</label>
-              <select id="dropdown1">
+              <select id="data-source-drop-down">
                 {% for source in data_sources %}
                 <option value="{{ source.name }}">{{ source.name }}</option>
                 {% endfor %}
               </select>
 
               <label for="dropdown2">Visualizer:</label>
-              <select id="dropdown2">
+              <select id="visualizers-drop-down">
                 {% for visualizer in visualizers %}
                 <option value="{{ visualizer.name }}">{{ visualizer.name }}</option>
                 {% endfor %}
               </select>
 
-              <a class="configure-plugins" href="#">Configure</a>
+                <button class="styled-button" type="button" onclick="openConfigureDialog();">Configure</button>
+                <button class="styled-button" type="button" onclick="cleanCanvas();">Clean</button>
             </form>
 
 
@@ -100,9 +103,27 @@
         </div>
 
       </div>
+
+    <div id="configure-dialog" class="popup-dialog" style="display:none;">
+      <div class="popup-content">
+        <h1>Orbyx Plugin Configuration</h1>
+        <form id="dynamic-form" class="dynamic-form">
+          <div id="form-container" class="form-container">
+          </div>
+          <br>
+          <div class="dialog-actions">
+            <button href="" class="styled-button exit-btn" onclick="closeConfigureDialog()">Close</button>
+            <button type="button" class="styled-button" onclick="requestGraph()">Visualize</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
     </div>
     
     <script>
+
       function changeCanvasStyle() {
         var canvasElements = document.querySelectorAll('canvas');
         canvasElements.forEach(function(canvas) {
@@ -117,8 +138,93 @@
         document.body.classList.toggle("dark-theme");
       }
     </script>
+<<<<<<< HEAD
     
   </body>
+=======
+
+    <script>
+      function openConfigureDialog() {
+        let data_source = document.getElementById("data-source-drop-down");
+        let data_source_text = data_source.options[data_source.selectedIndex].value; 
+
+        let visualizer = document.getElementById("visualizers-drop-down");
+        let visualizer_text = visualizer.options[visualizer.selectedIndex].value; 
+
+        fetchFormFields(data_source_text, visualizer_text);
+
+        document.getElementById('configure-dialog').style.display = 'flex';
+      }
+
+      function fetchFormFields(data_source_text, visualizer_text) {
+        fetch(`get-form-fields/?data_source=${data_source_text}&visualizer=${visualizer_text}`)
+          .then(response => response.json())
+          .then(data => {
+            const fields = data.fields;
+            const formContainer = document.getElementById('form-container');
+            formContainer.innerHTML = ''; 
+            fields.forEach(field => {
+              const label = document.createElement('label');
+              label.innerText = field.label;
+              const input = document.createElement('input');
+              input.type = field.type || 'text'; 
+              input.setAttribute('name', field.name);
+              formContainer.appendChild(label);
+              formContainer.appendChild(input);
+            });
+          }).catch(error => {
+            console.error('Error fetching form fields:', error);
+          });
+      }
+
+      function closeConfigureDialog() {
+        document.getElementById('configure-dialog').style.display = 'none';
+      }
+
+    </script>
+
+      <script>
+        function requestGraph() {
+          const formContainer = document.getElementById('form-container');
+          const formData = new FormData(); 
+          formContainer.querySelectorAll('input').forEach(input => {
+            formData.append(input.getAttribute('name'), input.value);
+          });
+
+          // Convert FormData into a plain object
+          const formDataObject = {};
+          formData.forEach((value, key) => {
+            formDataObject[key] = value;
+          });
+
+          fetch('load-graph', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json', 
+            },
+            body: JSON.stringify(formDataObject), 
+          })
+            .then(response => response.text()) 
+            .then(htmlContent => {
+              document.querySelector('body').innerHTML = '';
+              const scriptEl = document.createRange().createContextualFragment(htmlContent);
+              document.querySelector('body').append(scriptEl);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+
+          closeConfigureDialog();
+        }
+
+        function cleanCanvas() {
+          document.getElementsByClassName('complex-view')[0].innerHTML= '';
+          document.getElementsByClassName('tree-view')[0].innerHTML= '';
+          document.getElementsByClassName('bird-view')[0].innerHTML= '';
+        }
+
+    </script>
+>>>>>>> develop
 
 <footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"

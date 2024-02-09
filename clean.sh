@@ -20,6 +20,7 @@ if [[ -d "$orbyx_dir" ]]; then
   remove_package_artifacts "block_visualizer"
   remove_package_artifacts "simple_visualizer"
   remove_package_artifacts "graph_explorer"
+  remove_package_artifacts "java_data_source"
 
   cd "$project_root" || exit
 else
