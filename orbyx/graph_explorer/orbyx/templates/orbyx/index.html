@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bayon&family=Rubik&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js"></script>
     <title>Orbyx - Graph Explorer</title>
-    <link rel="stylesheet" href="{% static 'orbyx/style.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'orbyx/style.css' %}">
       <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.16/themes/default/style.min.css"
           integrity="sha512-A5OJVuNqxRragmJeYTW19bnw9M2WyxoshScX/rGTgZYj5hRXuqwZ+1AVn2d6wYTZPzPXxDeAGlae0XwTQdXjQA=="
@@ -19,6 +19,7 @@
 
   </head>
   <body>
+
 
     <div class="container">
       <div class="tiny-container">
@@ -79,7 +80,7 @@
             <section>
               <form class="filter-form">
                 <label> Contains: <input type="text" id="search_box"> </label>
-                <button class="styled-button" href="#" id="styled-button">Search</button>
+                <button class="styled-button" href="#" id="search_button">Serach</button>
                 <label> Filter: </label>
                 <input type="text" id="filter_box">
                 <button class="styled-button" id="filter_button" href="#">Apply</button>
@@ -92,7 +93,7 @@
           <div class="applied-queries">
             <section>
               <form>
-                <label> Applied filters:  </span> <span id="filters_span"> </label>
+                <span> Applied filters:  </span> <span id="filters_span"> </span>
               </form>
             </section>
           </div>
