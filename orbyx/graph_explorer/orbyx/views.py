@@ -117,4 +117,6 @@ def filter(request: HttpRequest, term: str):
 
     nodes = graph.serialize_nodes()
     edges = graph.serialize_edges()
+    return JsonResponse({'nodes': nodes, 'edges':edges})
+
 

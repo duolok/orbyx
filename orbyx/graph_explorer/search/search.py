@@ -29,6 +29,7 @@ class SearchProvider():
         self.working_graph = Graph()
         self.added_nodes = {}
         removed_edges = []
+        removed_nodes = []
         for edge in self.sub_graph.edges():
             
             (e1, e2) = edge.endpoints()
@@ -53,8 +54,15 @@ class SearchProvider():
                     print(e)
             else:
                 removed_edges.append(edge)
+        for node in self.sub_graph.nodes():
+            if str(node.node_value()) not in self.added_nodes.keys():
+                if (self._check_term(search_term, node)):
+                    node2 = self.working_graph.insert_node(node.node_value())
+                    self.added_nodes[str(node.node_value())] = node2
+                else:
+                    removed_nodes.append(node)
         self.sub_graph = self.working_graph
-        self.back_stack.append([["S", search_term], removed_edges])
+        self.back_stack.append([["S", search_term], removed_edges, removed_nodes])
     def reset(self):
         self.added_nodes = {}
         self.sub_graph = self.initial_graph
@@ -62,10 +70,11 @@ class SearchProvider():
 
     def undo(self):
         self.added_nodes = {}
+        undone_nodes = []
 
         if(len(self.back_stack) == 0):
             raise Exception("BackStack Empty")
-        [term, edges] = self.back_stack.pop()
+        [term, edges, nodes] = self.back_stack.pop()
         for edge in edges:
             (e1, e2) = edge.endpoints()
             for node in self.sub_graph.nodes():
@@ -77,11 +86,16 @@ class SearchProvider():
                 self.sub_graph._validate_node(e1)
             except:
                 e1 = self.sub_graph.insert_node(e1.node_value())
+                undone_nodes.append(str(e1.node_value()))
             try:
                 self.sub_graph._validate_node(e2)
             except:
                 e2 = self.sub_graph.insert_node(e2.node_value())
+                undone_nodes.append(str(e2.node_value()))
             self.sub_graph.insert_edge(e1, e2, edge.value())
+        for n in nodes:
+            if str(n.node_value()) not in undone_nodes:
+                self.sub_graph.insert_node(n.node_value())
         return self.sub_graph
 
     def _parse_filter(self, filter:str):
@@ -113,6 +127,7 @@ class SearchProvider():
     def _filter_edges(self, search_term):
         (key, operation, value) = self._parse_filter(search_term)
         removed_edges = []
+        removed_nodes = []
         self.added_nodes = {}
 
         self.working_graph = Graph()
@@ -141,12 +156,15 @@ class SearchProvider():
                 removed_edges.append(edge)
         not_added_nodes = []
         for node in self.sub_graph.nodes():
-            if str(node.node_value()) not in self.added_nodes.keys() and self._apply_filter(node, key, value, operation):
-                not_added_nodes.append(node)
+            if str(node.node_value()) not in self.added_nodes.keys():
+                if self._apply_filter(node, key, value, operation):
+                    not_added_nodes.append(node)
+                else:
+                    removed_nodes.append(node)
         for node in not_added_nodes:
             self.working_graph.insert_node(node.node_value())
         self.sub_graph = self.working_graph
-        self.back_stack.append([["F", search_term], removed_edges])
+        self.back_stack.append([["F", search_term], removed_edges, removed_nodes])
     def reinitialize(self):
         for operation in self.back_stack:
             if operation[0] == "F":

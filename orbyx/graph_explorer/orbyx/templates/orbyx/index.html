@@ -79,20 +79,21 @@
           <div class="filters">
             <section>
               <form class="filter-form">
-                <span> Contains: <input type="text"> </span>
-                <a class="search-button" href="#">Search</a>
+                <span> Contains: <input type="text" id="search_box"> </span>
+                <a class="search-button" href="#" id="search_button">Search</a>
                 <span> Filter: </span>
-                <input type="text">
-                <input type="text">
-                <input type="text">
-                <a class="search-button" href="#">Apply</a>
+                <input type="text" id="filter_box">
+                <a class="search-button" id="filter_button" href="#">Apply</a>
+                <a class="search-button" href="#" id="reset_button">Reset</a>
+                <a class="search-button" href="#" id="undo_button">Undo</a>
+
               </form>
             </section>
           </div>
           <div class="applied-queries">
             <section>
               <form>
-                <span> Applied filters:  </span>
+                <span> Applied filters:  </span> <span id="filters_span"> </span>
               </form>
             </section>
           </div>
@@ -102,7 +103,25 @@
         </div>
 
       </div>
+
+    <div id="configure-dialog" class="popup-dialog" style="display:none;">
+      <div class="popup-content">
+        <h1>Orbyx Plugin Configuration</h1>
+        <form id="dynamic-form" class="dynamic-form">
+          <div id="form-container" class="form-container">
+          </div>
+          <br>
+          <div class="dialog-actions">
+            <button href="" class="styled-button exit-btn" onclick="closeConfigureDialog()">Close</button>
+            <button type="button" class="styled-button" onclick="requestGraph()">Visualize</button>
+          </div>
+        </form>
+      </div>
     </div>
+
+
+    </div>
+    
     <script>
 
       function changeCanvasStyle() {
@@ -112,7 +131,7 @@
         });
       }
     </script>
-
+    
     <script>
       var icon = document.getElementById("dark-mode-switch");
       icon.onclick = function() {
