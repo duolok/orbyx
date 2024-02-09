@@ -113,6 +113,7 @@ var svg = d3.select("svg"),
 
     function slozenPrikaz(d){
       const keys = Object.keys(d);
+      
       var maxLen = d.name.length;
       var duzina=maxLen*13;
 
@@ -135,29 +136,51 @@ var svg = d3.select("svg"),
       .attr('stroke','white').attr('stroke-width',2);
 
         var i = 3;
-        keys.forEach(key => {
+         keys.forEach(key => {
             if(key == "id" || key == "name"){
                 return;
             }
             let partOfDescription;
             let value;
+            
             if(Array.isArray(d[key])){
-                value = d[key][0]
+                value = ""
+                d[key].forEach(field => {
+                    if(Array.isArray(field)){
+                        value += field[0] + " " + field[1] + ", "
+                    }
+                    else{
+                        value += " " + field
+                    }
+                })
+                if(d[key].length == 0){
+                    value = ""
+                }
+                partOfDescription = value;
             }else{
                 value = d[key]
             }
             if(value.length > maxLen*2){
-               partOfDescription = value.slice(0, (maxLen*2)-3);
-               partOfDescription += "..."
+                partOfDescription = value.slice(0, (maxLen*2)-3);
+                partOfDescription += "..."
             }else{
                 partOfDescription = value;
             }
-            d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',5).attr('y',i*textSize)
-              .attr('text-anchor','start')
-              .attr('font-size',textSize).attr('font-family','sans-serif')
-              .attr('fill','white').text(key+": "+partOfDescription);
+            
+            if(partOfDescription){
+                d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',5).attr('y',i*textSize)
+                .attr('text-anchor','start')
+                .attr('font-size',textSize).attr('font-family','sans-serif')
+                .attr('fill','white').text(key+": "+partOfDescription);
+            }else{
+                d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',5).attr('y',i*textSize)
+                .attr('text-anchor','start')
+                .attr('font-size',textSize).attr('font-family','sans-serif')
+                .attr('fill','white').text(key+": "+value);
+            }
+            
             i+=1;
-        });
+        }); 
     }
 
 

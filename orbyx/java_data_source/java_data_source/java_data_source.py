@@ -30,8 +30,7 @@ class JavaDataSource(DataSourceAPI):
             fields = [             
                 {'name': 'project_url', 'label': 'Project URL'}]         
             return fields
-        def get_data(self) -> graph.Graph:
-            return {"bla" : "bla"}
+     
         def get_graph(self, parsed_data: List[Dict[str, Any]]) -> graph.Graph:
             return self.builder.build(self.listener.nodes, self.listener.edges)
         def parse_java_file(self, file_path):
