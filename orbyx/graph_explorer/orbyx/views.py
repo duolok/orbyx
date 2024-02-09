@@ -62,5 +62,4 @@ def load_graph(request):
         'data_sources': data_sources,
         'visualizers': visualizers,
     }
-
     return render(request, 'orbyx/index.html', context) 
