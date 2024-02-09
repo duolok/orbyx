@@ -10,11 +10,11 @@
   fill: none;
   stroke: #999;
   stroke-width: 1.5px;
-}
 
-<!--#svg-container{-->
-<!--display: flex;-->
-<!--}-->
+    <!--#svg-container{-->
+    <!--display: flex;-->
+    <!--}-->
+}
 
 </style>
 </br>
@@ -22,20 +22,21 @@
     Current node:
 </div>
 <script>
-var containerWidth = document.getElementById("svg-container").clientWidth;
-var containerHeight = document.getElementById("svg-container").clientHeight;
+    var containerWidth = document.getElementById("svg-container").clientWidth;
+    var containerHeight = document.getElementById("svg-container").clientHeight;
 
-// Set up SVG canvas
-var svgContainer = d3.select("#svg-container")
-  .append("svg")
-  .attr("width", containerWidth)
-  .attr("height", containerHeight)
-  .attr("preserveAspectRatio", "xMidYMid meet")
-  .attr("viewBox", "0 0 " + containerWidth + " " + containerHeight);
+    var svgContainer = d3.select("#svg-container")
+          .append("svg")
+          .attr("width", containerWidth)
+          .attr("height", containerHeight)
+          .attr("preserveAspectRatio", "xMidYMid meet")
+          .attr("viewBox", "0 0 " + containerWidth + " " + containerHeight);
 
-var loadedNodes = {{ nodes }};
-var loadedEdges = {{ edges }};
-var parsedNodes = [];
+
+    var loadedNodes = {{ nodes }};
+    var loadedEdges = {{ edges }};
+    var parsedNodes = [];
+
 loadedNodes.forEach(node => {
     parsedNodes.push(JSON.parse(node))
 });
@@ -93,7 +94,7 @@ var svg = d3.select("svg"),
                               .on("drag", dragged)
                               .on("end", dragended));
 
-        zoomContainer.selectAll('.node').each(function(d){slozenPrikaz(d);});
+        zoomContainer.selectAll('.node').each(function(d){simpleView(d);});
 
     zoomContainer.selectAll('.node').on("mouseover", function(d) {
         const keys = Object.keys(d);
@@ -111,53 +112,20 @@ var svg = d3.select("svg"),
         d3.select(".details").text("Current node: ");
     });
 
-    function slozenPrikaz(d){
-      const keys = Object.keys(d);
-      var maxLen = d.name.length;
-      var duzina=maxLen*13;
+    function simpleView(d){
 
-      var textSize=10;
-      var visina=keys.length*textSize;
-      visina+=textSize;
+        var textSize=10;
+        var radius = 35 + d.name.length*2
 
-      d3.select("g#"+"node"+d.id.toString()).append('rect').
-      attr('x',0).attr('y',0).attr('width',duzina).attr('height',visina)
-      .attr('fill','#3B4656');
-      //Name
-      d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',duzina/2).attr('y',10)
-      .attr('text-anchor','middle')
-      .attr('font-size',textSize).attr('font-family','sans-serif')
-      .attr('fill','white').text(d.name);
+        d3.select("g#"+"node"+d.id.toString()).append('circle').
+        attr('r',radius)
+        .attr('fill','#3B4656');
+        //Name
+        d3.select("g#"+"node"+d.id.toString()).append('text')
+        .attr('text-anchor','middle')
+        .attr('font-size',textSize).attr('font-family','sans-serif')
+        .attr('fill','white').text(d.name);
 
-      //Line
-      d3.select("g#"+"node"+d.id.toString()).append('line').
-      attr('x1',0).attr('y1',2*textSize).attr('x2',duzina).attr('y2',2*textSize)
-      .attr('stroke','white').attr('stroke-width',2);
-
-        var i = 3;
-        keys.forEach(key => {
-            if(key == "id" || key == "name"){
-                return;
-            }
-            let partOfDescription;
-            let value;
-            if(Array.isArray(d[key])){
-                value = d[key][0]
-            }else{
-                value = d[key]
-            }
-            if(value.length > maxLen*2){
-               partOfDescription = value.slice(0, (maxLen*2)-3);
-               partOfDescription += "..."
-            }else{
-                partOfDescription = value;
-            }
-            d3.select("g#"+"node"+d.id.toString()).append('text').attr('x',5).attr('y',i*textSize)
-              .attr('text-anchor','start')
-              .attr('font-size',textSize).attr('font-family','sans-serif')
-              .attr('fill','white').text(key+": "+partOfDescription);
-            i+=1;
-        });
     }
 
 
@@ -199,7 +167,5 @@ var svg = d3.select("svg"),
     function linkDistance(d){
         console.log(d);
     }
-
-
 
 </script>

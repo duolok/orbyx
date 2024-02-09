@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
 from model.graph.graph import Graph
-
 class DataSourceAPI(ABC):
-    @abstractmethod
+    # @abstractmethod
     def get_name(self) -> str:
         """Abstract property for the name of the data source"""
         pass

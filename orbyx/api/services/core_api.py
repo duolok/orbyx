@@ -9,7 +9,12 @@ class CoreAPI(ABC):
     def send_data(self, Graph) -> None:
         """Abstract method to send data to Django"""
         pass
-    
+
+    @abstractmethod
+    def send_data_tree(self, Graph) -> None:
+        """Abstract method to send data to Django"""
+        pass
+
     @abstractmethod
     def get_data(self, params:  Dict[str, Any]):
         """Abstract method to retrieve data from Django"""
@@ -31,18 +36,22 @@ class CoreAPI(ABC):
         pass
 
     @abstractmethod
-    def get_data_sourcs() -> List[DataSourceAPI]:
+    def get_data_sources(self) -> List[DataSourceAPI]:
         """ Abstract method for getting data source plugins"""
         pass
 
     @abstractmethod
-    def get_visualizers() -> List[Visualizer]:
+    def get_visualizers(self) -> List[Visualizer]:
         """ Abstract method for getting data source plugins"""
         pass
     
     @abstractmethod
-    def _filter(self, graph: Graph, filter_criteria: Dict[str, Any]) -> Graph:
+    def _filter(self, filter: str) -> Graph:
         """Abstract method to apply filters to the graph"""
+        pass
+    @abstractmethod
+    def _search(self, term: str) -> Graph:
+        """Abstract method to apply search to the graph"""
         pass
     
     @abstractmethod
@@ -51,6 +60,15 @@ class CoreAPI(ABC):
         pass
 
     @abstractmethod
-    def send_data(self, graph: str):
+    def send_data(self, graph: str, vizualier:str):
         """Abstract method that will save current version of the graph"""
         pass
+    @abstractmethod
+    def reset_search(self):
+        """Abstract method that will reset search parameters"""
+        pass
+    @abstractmethod
+    def refresh_view(self):
+        """Abstract method that will refresh main view"""
+        pass
+    
