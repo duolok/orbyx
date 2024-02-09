@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bayon&family=Rubik&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js"></script>
     <title>Orbyx - Graph Explorer</title>
-    <link rel="stylesheet" href="{% static 'orbyx/style.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'orbyx/style.css' %}">
       <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.16/themes/default/style.min.css"
           integrity="sha512-A5OJVuNqxRragmJeYTW19bnw9M2WyxoshScX/rGTgZYj5hRXuqwZ+1AVn2d6wYTZPzPXxDeAGlae0XwTQdXjQA=="
@@ -20,6 +20,7 @@
   </head>
   <body>
 
+
     <div class="container">
       <div class="tiny-container">
 
@@ -28,8 +29,8 @@
             <span class="header-text"> orbyx </span>
           </div>
           <div class="header-buttons">
-            <a id="simple-view-btn" class="header-button" id="simple-changer"  onclick="visualizerChange('Simple Visualizer')" href="#">Simple View</a>
-            <a id="block-view-btn" class="header-button" id="block-changer" onclick="visualizerChange('Block Visualizer')" href="#">Block View</a>
+            <a id="simple-view-btn" class="header-button" href="#">Simple View</a>
+            <a id="block-view-btn" class="header-button" href="#">Block View</a>
           </div>
         </div>
 
@@ -78,13 +79,13 @@
           <div class="filters">
             <section>
               <form class="filter-form">
-                <label> Contains: <input type="text" id="search_box"> </label>
-                <button class="styled-button" href="#" id="search_button">Search</button>
-                <label> Filter: </label>
+                <span> Contains: <input type="text" id="search_box"> </span>
+                <a class="search-button" href="#" id="search_button">Search</a>
+                <span> Filter: </span>
                 <input type="text" id="filter_box">
-                <button class="styled-button" id="filter_button" href="#">Apply</button>
-                <button class="styled-button" href="#" id="reset_button">Reset</button>
-                <button class="styled-button" href="#" id="undo_button">Undo</button>
+                <a class="search-button" id="filter_button" href="#">Apply</a>
+                <a class="search-button" href="#" id="reset_button">Reset</a>
+                <a class="search-button" href="#" id="undo_button">Undo</a>
 
               </form>
             </section>
@@ -92,7 +93,7 @@
           <div class="applied-queries">
             <section>
               <form>
-                <label> Applied filters:  </span> <span id="filters_span"> </label>
+                <span> Applied filters:  </span> <span id="filters_span"> </span>
               </form>
             </section>
           </div>
@@ -120,7 +121,7 @@
 
 
     </div>
-    
+
     <script>
 
       function changeCanvasStyle() {
@@ -130,7 +131,7 @@
         });
       }
     </script>
-    
+
     <script>
       var icon = document.getElementById("dark-mode-switch");
       icon.onclick = function() {
@@ -141,10 +142,10 @@
     <script>
       function openConfigureDialog() {
         let data_source = document.getElementById("data-source-drop-down");
-        let data_source_text = data_source.options[data_source.selectedIndex].value; 
+        let data_source_text = data_source.options[data_source.selectedIndex].value;
 
         let visualizer = document.getElementById("visualizers-drop-down");
-        let visualizer_text = visualizer.options[visualizer.selectedIndex].value; 
+        let visualizer_text = visualizer.options[visualizer.selectedIndex].value;
 
         fetchFormFields(data_source_text, visualizer_text);
 
@@ -157,12 +158,12 @@
           .then(data => {
             const fields = data.fields;
             const formContainer = document.getElementById('form-container');
-            formContainer.innerHTML = ''; 
+            formContainer.innerHTML = '';
             fields.forEach(field => {
               const label = document.createElement('label');
               label.innerText = field.label;
               const input = document.createElement('input');
-              input.type = field.type || 'text'; 
+              input.type = field.type || 'text';
               input.setAttribute('name', field.name);
               formContainer.appendChild(label);
               formContainer.appendChild(input);
@@ -181,7 +182,7 @@
       <script>
         function requestGraph() {
           const formContainer = document.getElementById('form-container');
-          const formData = new FormData(); 
+          const formData = new FormData();
           formContainer.querySelectorAll('input').forEach(input => {
             formData.append(input.getAttribute('name'), input.value);
           });
@@ -194,12 +195,12 @@
 
           fetch('load-graph', {
             method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json', 
+            headers: {
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formDataObject), 
+            body: JSON.stringify(formDataObject),
           })
-            .then(response => response.text()) 
+            .then(response => response.text())
             .then(htmlContent => {
               document.querySelector('body').innerHTML = '';
               const scriptEl = document.createRange().createContextualFragment(htmlContent);
@@ -216,40 +217,6 @@
           document.getElementsByClassName('complex-view')[0].innerHTML= '';
           document.getElementsByClassName('tree-view')[0].innerHTML= '';
           document.getElementsByClassName('bird-view')[0].innerHTML= '';
-        }
-
-        function simplePluginChange() {
-          fetch('simple-plugin-change', {
-            method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json', 
-            },
-          })
-            .then(response => response.text()) 
-            .then(htmlContent => {
-              document.querySelector('body').innerHTML = '';
-              const scriptEl = document.createRange().createContextualFragment(htmlContent);
-              document.querySelector('body').append(scriptEl);
-            })
-            .catch(error => {
-              console.error('Error:', error);
-            });
-        }
-
-        function visualizerChange(plugin_name) {
-          const encodedPluginName = encodeURIComponent(plugin_name);
-          const url = `visualizer-change/?visualizer=${encodedPluginName}`;
-
-          fetch(url)
-            .then(response => response.text())
-            .then(htmlContent => {
-              document.querySelector('body').innerHTML = '';
-              const scriptEl = document.createRange().createContextualFragment(htmlContent);
-              document.querySelector('body').append(scriptEl);
-            })
-            .catch(error => {
-              console.error('Error:', error);
-            });
         }
 
     </script>
