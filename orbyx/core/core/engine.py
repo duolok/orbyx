@@ -6,6 +6,7 @@ from services.core_api import Graph
 
 from services.utils import *
 
+
 from model.graph.graph import Graph
 from search.search import SearchProvider
 import logging
@@ -16,6 +17,7 @@ class Engine(CoreAPI):
         self.data_source_plugin = None
         self.visualizer_plugin = None
         self.data_tree = None
+
 
     def _set_plugins(self, data_source_plugin: str, visualizer_plugin: str):
         data_source = get_data_source_plugin_by_name(data_source_plugin)
