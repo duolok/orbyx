@@ -61,6 +61,7 @@
               </select>
 
                 <button class="styled-button" type="button" onclick="openConfigureDialog();">Configure</button>
+                <button class="styled-button" type="button" onclick="cleanCanvas();">Clean</button>
             </form>
 
 
@@ -90,7 +91,7 @@
             </section>
           </div>
         </div>
-        <div class="complex-view">
+        <div class="complex-view" id="svg-container">
           {{main_view}}
         </div>
 
@@ -171,7 +172,6 @@
     </script>
 
       <script>
-
         function requestGraph() {
           const formContainer = document.getElementById('form-container');
           const formData = new FormData(); 
@@ -179,36 +179,36 @@
             formData.append(input.getAttribute('name'), input.value);
           });
 
+          // Convert FormData into a plain object
+          const formDataObject = {};
+          formData.forEach((value, key) => {
+            formDataObject[key] = value;
+          });
+
           fetch('load-graph', {
             method: 'POST',
             headers: { 
-              'X-CSRFToken': getCookie('csrftoken'), 
+              'Content-Type': 'application/json', 
             },
-            body: JSON.stringify(Object.fromEntries(formData)), 
+            body: JSON.stringify(formDataObject), 
           })
             .then(response => response.text()) 
             .then(htmlContent => {
-              document.querySelector('html').innerHTML = htmlContent; 
+              document.querySelector('body').innerHTML = '';
+              const scriptEl = document.createRange().createContextualFragment(htmlContent);
+              document.querySelector('body').append(scriptEl);
             })
             .catch(error => {
               console.error('Error:', error);
             });
+
           closeConfigureDialog();
         }
 
-        function getCookie(name) {
-          let cookieValue = null;
-          if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-              const cookie = cookies[i].trim();
-              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-              }
-            }
-          }
-          return cookieValue;
+        function cleanCanvas() {
+          document.getElementsByClassName('complex-view')[0].innerHTML= '';
+          document.getElementsByClassName('tree-view')[0].innerHTML= '';
+          document.getElementsByClassName('bird-view')[0].innerHTML= '';
         }
 
     </script>
