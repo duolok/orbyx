@@ -1,9 +1,10 @@
+import logging
 import os
 import sys
 import threading
 import xml.etree.ElementTree as ET
 from django.utils.safestring import mark_safe
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpRequest
 from django.shortcuts import render
 from django.template import loader, Context
 from django.views.decorators.csrf import csrf_exempt
@@ -63,3 +64,57 @@ def load_graph(request):
         'visualizers': visualizers,
     }
     return render(request, 'orbyx/index.html', context) 
+    
+def tree_view_data(request: HttpRequest):
+    engine = get_engine()
+    graph = engine.data_tree
+    nodes = graph.serialize_nodes()
+    edges = graph.serialize_edges()
+
+    return JsonResponse({'nodes': nodes, 'edges':edges})
+
+
+def search(request: HttpRequest, term):
+    engine = get_engine()
+    
+    graph = engine._search(engine, term)
+
+    nodes = graph.serialize_nodes()
+    edges = graph.serialize_edges()
+  
+    return JsonResponse({'nodes': nodes, 'edges':edges})
+  
+def filtered_view(request: HttpRequest):
+    engine = get_engine()
+    
+    visualization = engine.refresh_view(engine)
+    
+    return JsonResponse({"visualization": mark_safe(visualization)})
+
+def reset_search(request: HttpRequest):
+    engine = get_engine()
+    graph = engine.reset_search(engine)
+
+    nodes = graph.serialize_nodes()
+    edges = graph.serialize_edges()
+
+    return JsonResponse({'nodes': nodes, 'edges':edges})
+
+def undo_search(reuest: HttpRequest):
+    engine = get_engine()
+    graph = engine.undo_search(engine)
+
+    nodes = graph.serialize_nodes()
+    edges = graph.serialize_edges()
+
+    return JsonResponse({'nodes': nodes, 'edges':edges})
+
+def filter(request: HttpRequest, term: str):
+   
+    engine = get_engine()
+    graph = engine._filter(engine, term)
+
+    nodes = graph.serialize_nodes()
+    edges = graph.serialize_edges()
+
+    return JsonResponse({'nodes': nodes, 'edges':edges, 'term': term})

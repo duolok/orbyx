@@ -1,4 +1,4 @@
-from services.visualizer_api import Visualizer
+from api.services.visualizer_api import Visualizer
 
 
 class Ispis(Visualizer):
