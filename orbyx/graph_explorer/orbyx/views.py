@@ -78,7 +78,7 @@ def tree_view_data(request: HttpRequest):
 def search(request: HttpRequest, term):
     engine = get_engine()
     
-    graph = engine._search(engine, term)
+    graph = engine._search(term)
 
     nodes = graph.serialize_nodes()
     edges = graph.serialize_edges()
@@ -88,13 +88,13 @@ def search(request: HttpRequest, term):
 def filtered_view(request: HttpRequest):
     engine = get_engine()
     
-    visualization = engine.refresh_view(engine)
+    visualization = engine.refresh_view()
     
     return JsonResponse({"visualization": mark_safe(visualization)})
 
 def reset_search(request: HttpRequest):
     engine = get_engine()
-    graph = engine.reset_search(engine)
+    graph = engine.reset_search()
 
     nodes = graph.serialize_nodes()
     edges = graph.serialize_edges()
@@ -103,7 +103,7 @@ def reset_search(request: HttpRequest):
 
 def undo_search(reuest: HttpRequest):
     engine = get_engine()
-    graph = engine.undo_search(engine)
+    graph = engine.undo_search()
 
     nodes = graph.serialize_nodes()
     edges = graph.serialize_edges()
@@ -113,9 +113,10 @@ def undo_search(reuest: HttpRequest):
 def filter(request: HttpRequest, term: str):
    
     engine = get_engine()
-    graph = engine._filter(engine, term)
+    graph = engine._filter(term)
 
     nodes = graph.serialize_nodes()
     edges = graph.serialize_edges()
+    return JsonResponse({'nodes': nodes, 'edges':edges})
 
-    return JsonResponse({'nodes': nodes, 'edges':edges, 'term': term})
+

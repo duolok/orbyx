@@ -19,10 +19,11 @@ class Simple_Builder(Graph_Builder):
                 g.insert_edge(nodes[edge[0]]["node"], nodes[edge[1]]["node"])
             except KeyError:
                 #The second node of the edge is external to the project, therefore we don't have a declaration for it
-                node2 = g.insert_node({"name" : edge[1], "fields" : [], "comment" : "THIS NODE IS EXTERNAL TO THE PROJECT"})
+                node2 = g.insert_node({"name" : edge[1].replace("<", "[").replace(">", "]"), "fields" : [], "comment" : "THIS NODE IS EXTERNAL TO THE PROJECT", "id" : id})
                 nodes[edge[1]] = {"node" : node2,
-                    "data" :{"name" : edge[1], "fields" : [], "comment" : "THIS NODE IS EXTERNAL TO THE PROJECT"}}
+                    "data" :{"name" : edge[1].replace("<", "[").replace(">", "]"), "fields" : [], "comment" : "THIS NODE IS EXTERNAL TO THE PROJECT", "id" : id}}
                 g.insert_edge(nodes[edge[0]]["node"], node2)
+                id+=1
             except ValueError:
                 #This edge already exists, no need to add it again
                 pass
@@ -43,10 +44,11 @@ class Weighed_Builder(Graph_Builder):
                 g.insert_edge(nodes[edge[0]]["node"], nodes[edge[1]]["node"], 1)
             except KeyError:
                 #The second node of the edge is external to the project, therefore we don't have a declaration for it
-                node2 = g.insert_node({"name" : edge[1], "fields" : [], "comment" : "THIS NODE IS EXTERNAL TO THE PROJECT"})
+                node2 = g.insert_node({"name" : edge[1].replace("<", "[").replace(">", "]"), "fields" : [], "comment" : "THIS NODE IS EXTERNAL TO THE PROJECT", "id" : id})
                 nodes[edge[1]] = {"node" : node2,
-                    "data" :{"name" : edge[1], "fields" : [], "comment" : "THIS NODE IS EXTERNAL TO THE PROJECT"}}
+                    "data" :{"name" : edge[1].replace("<", "[").replace(">", "]"), "fields" : [], "comment" : "THIS NODE IS EXTERNAL TO THE PROJECT", "id" : id}}
                 g.insert_edge(nodes[edge[0]]["node"], node2, 1)
+                id+=1
             except ValueError:
                 g.get_edge(nodes[edge[0]]["node"], nodes[edge[1]]["node"])._value += 1
         return g

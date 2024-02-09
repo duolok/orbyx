@@ -6,6 +6,7 @@ from services.core_api import Graph
 
 from services.utils import *
 
+
 from model.graph.graph import Graph
 from search.search import SearchProvider
 import logging
@@ -16,6 +17,7 @@ class Engine(CoreAPI):
         self.data_source_plugin = None
         self.visualizer_plugin = None
         self.data_tree = None
+
 
     def _set_plugins(self, data_source_plugin: str, visualizer_plugin: str):
         data_source = get_data_source_plugin_by_name(data_source_plugin)
@@ -40,15 +42,15 @@ class Engine(CoreAPI):
     def refresh_view(self):
         graph = Engine.search_provider.sub_graph
         self.data_tree = graph
-        visualizer = get_visualizer_plugin_by_name("Simple Visualizer")
+        visualizer = self.visualizer_plugin
         return visualizer.visualize(graph)
 
     def send_data_tree(self):
-        wikipedia_data_source = get_data_source_plugin_by_name("Java Parser")
+        wikipedia_data_source = self.data_source_plugin
         parsed_data = wikipedia_data_source.parse_data({'project_url' : "D:\\Marko\\Desktop\\iss3\\ISS-Projekat-Tim27\\Nomad Server\\src"})
         graph = wikipedia_data_source.get_graph(parsed_data)
         Engine.search_provider = SearchProvider(graph)
-
+        self.data_tree = graph
         logging.info("GRAF: ")
         logging.info(graph)
         return graph
