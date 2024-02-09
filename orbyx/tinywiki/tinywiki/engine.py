@@ -5,6 +5,7 @@ from model.graph.graph import Graph, GraphNode
 from services.data_source_api import DataSourceAPI
 from tinywiki.scraper import get_scraped_dictionary
 from typing import Any, List, Dict
+from tinywiki.config import *
 
 class WikipediaDataSource(DataSourceAPI):
     def __init__(self):
@@ -21,9 +22,8 @@ class WikipediaDataSource(DataSourceAPI):
         return fields
     
     def parse_data(self, data: Any) -> List[Dict[str, Any]]:
-        #start_url = data[0]
-        start_url = "https://en.wikipedia.org/wiki/Rust_(programming_language)"
-        scraped_dictionary = get_scraped_dictionary(start_url)
+        start_url, max_nodes = data['start_url'], data['max_nodes']
+        scraped_dictionary = get_scraped_dictionary(start_url, max_nodes)
         return [{key: val} for key, val in scraped_dictionary.items()]
 
     def get_graph(self, parsed_data: List[Dict[str, Any]]) -> Graph:
