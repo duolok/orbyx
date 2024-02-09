@@ -1,7 +1,7 @@
 from typing import List, Union
 
 import pkg_resources
-from services.visualizer_api import Visualizer
+from api.services.visualizer_api import Visualizer
 
 
 def console_menu(*args, **kwargs):
