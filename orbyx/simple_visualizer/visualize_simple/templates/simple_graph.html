@@ -1,0 +1,215 @@
+<style>
+
+.node {
+  cursor: pointer;
+  color: #3182bd;
+
+}
+
+.link {
+  fill: none;
+  stroke: #999;
+  stroke-width: 1.5px;
+
+    <!--#svg-container{-->
+    <!--display: flex;-->
+    <!--}-->
+}
+#main2 {
+    display: none;
+}
+
+</style>
+</br>
+<div class = "details" height="30px">
+    Current node:
+</div>
+<script>
+    var containerWidth = document.getElementById("svg-container").clientWidth;
+    var containerHeight = document.getElementById("svg-container").clientHeight;
+
+    var svgContainer = d3.select("#svg-container")
+          .append("svg")
+          .attr("width", containerWidth)
+          .attr("height", containerHeight)
+          .attr("preserveAspectRatio", "xMidYMid meet")
+          .attr("viewBox", "0 0 " + containerWidth + " " + containerHeight)
+          .attr('id', "main"); // Outline width
+
+var svgContainer2 = d3.select("#svg-container")
+  .append("svg")
+  .attr("width", containerWidth)
+  .attr("height", containerHeight)
+  .attr("preserveAspectRatio", "xMidYMid meet")
+  .attr("viewBox", "0 0 " + containerWidth + " " + containerHeight)
+  .attr('id', "main2"); // Outline width
+
+  var zoomHelper = svgContainer2.append("g");
+
+var loadedNodes = {{ nodes }};
+var loadedEdges = {{ edges }};
+var parsedNodes = [];
+
+loadedNodes.forEach(node => {
+    parsedNodes.push(JSON.parse(node))
+});
+var parsedEdges = [];
+loadedEdges.forEach(node => {
+    parsedEdges.push(JSON.parse(node))
+});
+
+    var zoomContainer = svgContainer.call(d3.zoom().scaleExtent([0.3, 2]).translateExtent([[0, 0], [containerWidth, containerHeight]]).on("zoom", zoomed))
+    .append("g");
+
+function zoomed(event) {
+        zoomContainer.attr("transform", d3.event.transform);
+    // Access the transform object to get the current zoom state
+    const transform = d3.event.transform;
+
+    // Trigger a custom event to notify about the zoom change
+    const zoomChangeEvent = new CustomEvent('zoomChange', {
+        detail: {
+            scale: transform.k, // Current zoom scale
+            translateX: transform.x, // Current translateX
+            translateY: transform.y // Current translateY
+        }
+    });
+
+    // Dispatch the custom event on the SVG element
+    svgContainer.node().dispatchEvent(zoomChangeEvent);
+    }
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    var simulation = d3.forceSimulation()
+                        .force("charge", d3.forceManyBody().strength(-100))
+                        .force("center", d3.forceCenter(containerWidth / 2, containerHeight / 2));
+
+    var linkMap = d3.map();
+
+
+
+        var nodes = parsedNodes,
+            nodeById = d3.map(nodes, function(d) { return d.id; }),
+            links = parsedEdges,
+            bilinks = [];
+
+        links.forEach(function(link) {
+            var s = link.source = nodeById.get(link.source.id),
+                t = link.target = nodeById.get(link.target.id);
+            bilinks.push([s, t]);
+        });
+
+
+        var link = zoomContainer.selectAll(".link")
+                         .attr("stroke", "#000")
+                          .attr("stroke-opacity", 0.6)
+                        .data(bilinks)
+                        .enter().append("line")
+                        .attr("class", "link");
+
+        var linkBird = zoomHelper.selectAll(".link")
+                             .attr("stroke", "#000")
+                              .attr("stroke-opacity", 0.6)
+                            .data(bilinks)
+                            .enter().append("line")
+                            .attr("class", "link");
+
+
+        var node = zoomContainer.selectAll(".node")
+                        .data(nodes.filter(function(d) { return d.id; }))
+                        .enter().append('g')
+                        .attr("class", "node")
+                        .attr('id', function(d){return "node"+d.id.toString();})
+                        .call(d3.drag()
+                              .on("start", dragstarted)
+                              .on("drag", dragged)
+                              .on("end", dragended));
+
+         var nodeBird = zoomHelper.selectAll(".node")
+                        .data(nodes.filter(function(d) { return d.id; }))
+                        .enter().append('g')
+                        .attr("class", "node")
+                        .attr('id', function(d){return "node"+d.id.toString()+"Bird";});
+
+        zoomContainer.selectAll('.node').each(function(d){simpleView(d, "node"+d.id.toString());});
+        zoomHelper.selectAll('.node').each(function(d){simpleView(d, "node"+d.id.toString()+"Bird");});
+
+
+    zoomContainer.selectAll('.node').on("mouseover", function(d) {
+        const keys = Object.keys(d);
+        let str = "";
+        keys.forEach(key => {
+            if(key == "id" || Array.isArray(d[key]) || key == "index" || key == "x" || key == "y" || key == "vy" || key == "vx" || key == "fx" || key == "fy"){
+                return;
+            }
+            str += key +": "+d[key] +"  ";
+
+        });
+
+        d3.select(".details").append('text').text(str);
+    }).on("mouseout", function(d) {
+        d3.select(".details").text("Current node: ");
+    });
+
+    function simpleView(d, group){
+
+        var textSize=10;
+        var radius = 35 + d.name.length*2
+
+        d3.select("g#"+group).append('circle').
+        attr('r',radius)
+        .attr('fill','#3B4656');
+        //Name
+        d3.select("g#"+group).append('text')
+        .attr('text-anchor','middle')
+        .attr('font-size',textSize).attr('font-family','sans-serif')
+        .attr('fill','white').text(d.name);
+
+    }
+
+
+        node.append("title")
+            .text(function(d) { return d.id; });
+
+        simulation
+            .nodes(nodes)
+            .on("tick", ticked);
+
+        simulation.force("link", d3.forceLink(links).id(d => d.id).distance(1000).strength(1));
+
+        function ticked() {
+            link.attr('x1', function(d) { return d[0].x; })
+            .attr('y1', function(d) { return d[0].y; })
+            .attr('x2', function(d) { return d[1].x; })
+            .attr('y2', function(d) { return d[1].y; });
+            node.attr("transform", positionNode);
+            linkBird.attr('x1', function(d) { return d[0].x; })
+            .attr('y1', function(d) { return d[0].y; })
+            .attr('x2', function(d) { return d[1].x; })
+            .attr('y2', function(d) { return d[1].y; });
+            nodeBird.attr("transform", positionNode);
+        }
+
+    function positionNode(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+    }
+
+    function dragstarted(d) {
+        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x, d.fy = d.y;
+    }
+
+    function dragged(d) {
+        d.fx = d3.event.x, d.fy = d3.event.y;
+    }
+
+    function dragended(d) {
+        if (!d3.event.active) simulation.alphaTarget(.01);
+        d.fx = null, d.fy = null;
+    }
+
+    function linkDistance(d){
+        console.log(d);
+    }
+
+</script>
