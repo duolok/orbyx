@@ -1,3 +1,4 @@
+![image](https://github.com/duolok/orbyx/assets/42711489/2b554114-6082-4d62-b7ae-43ca96acd383)
 
 <h1 align="center"> Orbyx </h1>
 
@@ -85,3 +86,8 @@ That's it! You're ready to enjoy Orbyx.
 - Bird View - Minimized view of the entire graph, which traces your zoom with a red rectangle.
 
 #### Gallery
+![image](https://github.com/duolok/orbyx/assets/42711489/e9b4ab65-2cc3-42a5-b833-748d31302e5e)
+![image](https://github.com/duolok/orbyx/assets/42711489/8c65ffc5-d48a-4969-8fa4-6d94bd392673)
+![image](https://github.com/duolok/orbyx/assets/42711489/6d1a63cf-c804-48b2-9b4d-90c8eae38a76)
+
+
