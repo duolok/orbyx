@@ -88,6 +88,7 @@ That's it! You're ready to enjoy Orbyx.
 #### Gallery
 ![image](https://github.com/duolok/orbyx/assets/42711489/e9b4ab65-2cc3-42a5-b833-748d31302e5e)
 ![image](https://github.com/duolok/orbyx/assets/42711489/8c65ffc5-d48a-4969-8fa4-6d94bd392673)
-![image](https://github.com/duolok/orbyx/assets/42711489/6d1a63cf-c804-48b2-9b4d-90c8eae38a76)
+![image](https://github.com/duolok/orbyx/assets/42711489/3c7ed7f5-1d93-4fd1-933f-cd2473ad7351)
+
 
 
