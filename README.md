@@ -85,7 +85,7 @@ That's it! You're ready to enjoy Orbyx.
 - Tree View - Displays data in a Tree like way, similar to popular IDEs or text editors, located on left of the  web application.
 - Bird View - Minimized view of the entire graph, which traces your zoom with a red rectangle.
 
-#### Devs:
+### Devs:
 - [Dusan Lecic](https://github.com/duolok)
 - [Marko Kuvizic](https://github.com/MarkoKuvizic)
 - [Milica Obradovic](https://github.com/MilicaObradovic)
