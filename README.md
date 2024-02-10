@@ -86,10 +86,10 @@ That's it! You're ready to enjoy Orbyx.
 - Bird View - Minimized view of the entire graph, which traces your zoom with a red rectangle.
 
 #### Devs:
-- Dusan Lecic [https://github.com/duolok](https://github.com/duolok)
-- Marko Kuvizic [https://github.com/MarkoKuvizic](https://github.com/MarkoKuvizic)
-- Milica Obradovic [https://github.com/MilicaObradovic](https://github.com/MilicaObradovic)
-- Tijana Mazinjanin [https://github.com/mazinjanint](https://github.com/mazinjanint)
+- [https://github.com/duolok](Dusan Lecic)
+- [https://github.com/MarkoKuvizic](Marko Kuvizic)
+- [https://github.com/MilicaObradovic](Milica Obradovic)
+- [https://github.com/mazinjanint](Tijana Mazinjanin)
 
 #### Gallery
 ![image](https://github.com/duolok/orbyx/assets/42711489/e9b4ab65-2cc3-42a5-b833-748d31302e5e)
