@@ -1,4 +1,4 @@
-![image](https://github.com/duolok/orbyx/assets/42711489/df9ba8b1-0957-4a7f-b648-f27dcec7eec0)
+![image](https://github.com/duolok/orbyx/assets/42711489/39184aa6-1630-4f00-89c3-067412d75596)
 
 <h1 align="center"> Orbyx </h1>
 
